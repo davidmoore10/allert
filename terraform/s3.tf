@@ -1,8 +1,8 @@
-resource "aws_s3_bucket" "lambda_code_bucket" {
-  bucket = "lambda-code-bucket-7050736"
+resource "aws_s3_bucket" "template_s3" {
+  bucket = "template-s3-bucket-662941"
   acl    = "private"
 
   tags = {
-    Name = "Lambda Bucket"
+    Name = "TemplateS3Bucket"
   }
 }
