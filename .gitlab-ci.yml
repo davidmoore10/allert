@@ -15,17 +15,22 @@
 
 image: node
 
-stages:          # List of stages for jobs, and their order of execution
-  - build
+stages: # List of stages for jobs, and their order of execution
+  - init          
   - lint
+  - build
   - test
+
+init:
+  stage: init
+  script:
+    - npm install eslint
+    - npm install --save-dev eslint-plugin-react-native
 
 eslint:
  # tell eslint what stage it is
   stage: lint
   script:
-    # install eslint
-    - npm i eslint
     # Run eslint
     - node_modules/eslint/bin/eslint.js .
 
