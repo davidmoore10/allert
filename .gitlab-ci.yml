@@ -29,6 +29,7 @@ init:
   stage: init
   script:
     - npm install eslint
+    - npm install --save-dev eslint-plugin-react
     - npm install --save-dev eslint-plugin-react-native
 
 eslint:
