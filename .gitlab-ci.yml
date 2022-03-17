@@ -29,11 +29,10 @@ init:
   stage: init
   script:
     - npm install eslint \
-    eslint-plugin-react@latest \
+    eslint-plugin-react \
     eslint-plugin-react-native \
-    @typescript-eslint/eslint-plugin@latest \
-    eslint-config-google@latest \
-    @typescript-eslint/parser@latest
+    eslint-config-google \
+    
 
 eslint:
  # tell eslint what stage it is
