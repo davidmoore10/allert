@@ -28,9 +28,12 @@ stages: # List of stages for jobs, and their order of execution
 init:
   stage: init
   script:
-    - npm install eslint
-    - npm install --save-dev eslint-plugin-react
-    - npm install --save-dev eslint-plugin-react-native
+    - npm install eslint \
+    eslint-plugin-react@latest \
+    eslint-plugin-react-native \
+    @typescript-eslint/eslint-plugin@latest \
+    eslint-config-google@latest \
+    @typescript-eslint/parser@latest
 
 eslint:
  # tell eslint what stage it is
