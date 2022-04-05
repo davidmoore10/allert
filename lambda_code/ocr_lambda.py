@@ -1,26 +1,29 @@
 import json
-import boto3
+import base64
 import pytesseract
-from PIL import Image
+    
+def ocr(img):
 
-s3_client = boto3.client("s3")
-S3_BUCKET_NAME = 'template-s3-bucket-662941'
-S3_OBJECT_KEY = 'IMG_4860_CROP.jpg'
-
+  ocr_text = pytesseract.image_to_string(img).strip()
+  return ocr_text
+      
 def ocr_handler(event, context):
-    img = s3_client.get_object(Bucket=S3_BUCKET_NAME, Key=S3_OBJECT_KEY)
-    request_body = json.loads(event['body'])
-    image = s3_client.get_object(img)
-
-    text = pytesseract.image_to_string(Image.open(image))
-
-    body = {
-        "text": text
+    
+    body_image64 = event['image64']
+    allergies = event['user_allergies']
+    
+    # Decode & save image to /tmp
+    with open("/tmp/saved_img.png", "wb") as f:
+      f.write(base64.b64decode(body_image64))
+    
+    # Ocr
+    ocr_text = ocr("/tmp/saved_img.png")
+    
+    # Return the result data in json format
+    event["ocr_text"] = ocr_text
+    del event["image64"]
+    
+    return {
+        'statusCode': 200,
+        'body': json.dumps(event)
     }
-
-    response = {
-        "statusCode": 200,
-        "body": json.dumps(body)
-    }
-
-    return response
