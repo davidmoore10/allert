@@ -9,6 +9,14 @@ resource "aws_lambda_function" "ocr_lambda" {
   memory_size   = 1024
 }
 
+resource "aws_lambda_function" "post_proc_lambda" {
+  filename      = "${path.module}/../lambda_code/post_proc_lambda.zip"
+  function_name = "post_proc_lambda"
+  role          = aws_iam_role.lambda_role.arn
+  handler       = "post_proc_lambda.post_proc_handler"
+  runtime       = "python3.7"
+}
+
 resource "aws_lambda_layer_version" "tesseract_lambda_layer" {
   filename            = "${path.module}/../lambda_code/tesseract-layer.zip"
   layer_name          = "tesseract_layer"

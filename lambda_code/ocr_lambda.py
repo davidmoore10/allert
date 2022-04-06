@@ -4,7 +4,8 @@ import pytesseract
     
 def ocr(img):
 
-  ocr_text = pytesseract.image_to_string(img).strip()
+  # Perform OCR, remove newlines and convert all chars to lowercase
+  ocr_text = pytesseract.image_to_string(img).strip().replace("\n", " ").lower()
   return ocr_text
       
 def ocr_handler(event, context):

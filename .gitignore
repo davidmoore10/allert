@@ -10,3 +10,8 @@
 
 # .ppk keys
 *.ppk
+
+# lambda layer files
+
+pylibs-layer.zip
+tesseract-layer.zip
