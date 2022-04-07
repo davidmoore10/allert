@@ -6,8 +6,7 @@ from collections import OrderedDict
 def post_proc_handler(event, context):
     
     # Load the OCRd text
-    body = json.loads(event["body"])
-    text = body["ocr_text"]
+    text = event["ocr_text"]
     
     # Remove non alpha chars, list, sort and eliminate duplicates
     text = re.sub('[^a-zA-Z ]', "", text)
@@ -16,8 +15,8 @@ def post_proc_handler(event, context):
     text = list(OrderedDict.fromkeys(text))
 
     # Return the result in json format
-    body["ocr_text"] = text
-    event["body"] = body
+    event["ocr_text"] = text
+    print(event)
 
     return {
         'statusCode': 200,

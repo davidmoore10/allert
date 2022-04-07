@@ -2,10 +2,12 @@
     "Version": "2012-10-17",
     "Statement": [
       {
-        "Sid": "Stmt1643811979551",
-        "Action": "logs:*",
+        "Action": [
+          "logs:*",
+          "states:StartExecution"
+        ],
         "Effect": "Allow",
         "Resource": "*"
       }
     ]
-  }
+}
