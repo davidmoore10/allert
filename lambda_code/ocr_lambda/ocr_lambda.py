@@ -32,7 +32,7 @@ def ocr_handler(event, context):
     
     # Triggering step function
     response = client.start_execution(
-      stateMachineArn = 'arn:aws:states:eu-west-1:260350295037:stateMachine:LambdaTriggered',
+      stateMachineArn = 'arn:aws:states:eu-west-1:260350295037:stateMachine:allert_step_function',
       name = user_id,
       input = json.dumps(input)
       )

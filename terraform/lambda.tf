@@ -10,10 +10,16 @@ data "archive_file" "post_proc_lambda_zip" {
   output_path = "${path.module}/../lambda_code/post_proc_lambda.zip"
 }
 
+data "archive_file" "dynamodb_lambda_zip" {
+  type        = "zip"
+  source_dir  = "${path.module}/../lambda_code/dynamodb_lambda"
+  output_path = "${path.module}/../lambda_code/dynamodb_lambda.zip"
+}
+
 resource "aws_lambda_function" "ocr_lambda" {
   filename      = "${path.module}/../lambda_code/ocr_lambda.zip"
   function_name = "ocr_lambda"
-  role          = "${aws_iam_role.lambda_role.arn}"
+  role          = aws_iam_role.lambda_role.arn
   handler       = "ocr_lambda.ocr_handler"
   runtime       = "python3.7"
   layers        = [aws_lambda_layer_version.tesseract_lambda_layer.arn, aws_lambda_layer_version.pylibs_lambda_layer.arn]
@@ -24,8 +30,16 @@ resource "aws_lambda_function" "ocr_lambda" {
 resource "aws_lambda_function" "post_proc_lambda" {
   filename      = "${path.module}/../lambda_code/post_proc_lambda.zip"
   function_name = "post_proc_lambda"
-  role          = "${aws_iam_role.lambda_role.arn}"
+  role          = aws_iam_role.lambda_role.arn
   handler       = "post_proc_lambda.post_proc_handler"
+  runtime       = "python3.7"
+}
+
+resource "aws_lambda_function" "dynamodb_lambda" {
+  filename      = "${path.module}/../lambda_code/dynamodb_lambda.zip"
+  function_name = "dynamodb_lambda"
+  role          = aws_iam_role.lambda_role.arn
+  handler       = "dynamodb_lambda.dynamodb_handler"
   runtime       = "python3.7"
 }
 

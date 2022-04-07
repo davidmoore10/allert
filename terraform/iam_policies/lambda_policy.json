@@ -4,7 +4,8 @@
       {
         "Action": [
           "logs:*",
-          "states:StartExecution"
+          "states:StartExecution",
+          "dynamodb:*"
         ],
         "Effect": "Allow",
         "Resource": "*"
