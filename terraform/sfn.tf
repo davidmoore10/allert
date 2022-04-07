@@ -14,7 +14,7 @@ resource "aws_sfn_state_machine" "allert_step_function" {
             },
             "test_search": {
                 "Type": "Task",
-                "Resource": "arn:aws:lambda:eu-west-1:260350295037:function:testSearch",
+                "Resource": "arn:aws:lambda:eu-west-1:260350295037:function:dynamodb_lambda",
                 "End": true
                     }
                 }
