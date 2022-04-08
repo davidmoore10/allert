@@ -14,32 +14,35 @@ def ocr(img):
       
 def ocr_handler(event, context):
   
-    # This and the uuid import can probably be removed when API gateway is implemented.
-    # Need a unique ID for trigger SF, this will be in API call?
+    # Need a unique ID for triggering step function
     user_id = str(uuid.uuid1())
-    body_image64 = event['image64']
-    allergies = event['user_allergies']
 
-    # Decode & save image to /tmp
+    # Body from API POST
+    body = json.loads(event['body'])
+    body_image64 = body['image64']
+    allergies = body['user_allergies']
+
+    # Decode base64 & save image to /tmp
     with open("/tmp/saved_img.png", "wb") as f:
       f.write(base64.b64decode(body_image64))
     
-    # Ocr
+    # OCR on saved image
     ocr_text = ocr("/tmp/saved_img.png")
     
     # Wrap the result data as dictionary, use as input for step function
     input = {"user_id": user_id, "ocr_text": ocr_text, "allergies": allergies}
     
     # Triggering step function
-    response = client.start_execution(
+    response = client.start_sync_execution(
       stateMachineArn = 'arn:aws:states:eu-west-1:260350295037:stateMachine:allert_step_function',
       name = user_id,
       input = json.dumps(input)
       )
-      
-    print(response)
     
-    # return {
-    #     'statusCode': 200,
-    #     'body': json.dumps(response)
-    # }
+    # This will be response for API
+    resp = json.loads(response["output"])["body"]
+    
+    return {
+        'statusCode': 200,
+        'body': json.dumps(resp)
+    }

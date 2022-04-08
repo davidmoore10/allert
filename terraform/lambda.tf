@@ -24,7 +24,7 @@ resource "aws_lambda_function" "ocr_lambda" {
   runtime       = "python3.7"
   layers        = [aws_lambda_layer_version.tesseract_lambda_layer.arn, aws_lambda_layer_version.pylibs_lambda_layer.arn]
   timeout       = 60
-  memory_size   = 1024
+  memory_size   = 2048
 }
 
 resource "aws_lambda_function" "post_proc_lambda" {
@@ -53,4 +53,14 @@ resource "aws_lambda_layer_version" "pylibs_lambda_layer" {
   filename            = "${path.module}/../lambda_code/pylibs-layer.zip"
   layer_name          = "pylibs_layer"
   compatible_runtimes = ["python3.7"]
+}
+
+resource "aws_lambda_permission" "apigw_lambda" {
+  statement_id  = "AllowExecutionFromAPIGateway"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.ocr_lambda.function_name
+  principal     = "apigateway.amazonaws.com"
+
+  # More: http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-control-access-using-iam-policies-to-invoke-api.html
+  source_arn = "arn:aws:execute-api:eu-west-1:260350295037:${aws_api_gateway_rest_api.allert-rest-api.id}/*/*/*"
 }

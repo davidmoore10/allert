@@ -5,6 +5,7 @@
         "Action": [
           "logs:*",
           "states:StartExecution",
+          "states:StartSyncExecution",
           "dynamodb:*"
         ],
         "Effect": "Allow",
