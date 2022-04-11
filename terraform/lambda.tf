@@ -16,6 +16,12 @@ data "archive_file" "dynamodb_lambda_zip" {
   output_path = "${path.module}/../lambda_code/dynamodb_lambda.zip"
 }
 
+data "archive_file" "match_allergens_lambda_zip" {
+  type        = "zip"
+  source_dir  = "${path.module}/../lambda_code/match_allergens_lambda"
+  output_path = "${path.module}/../lambda_code/match_allergens_lambda.zip"
+}
+
 resource "aws_lambda_function" "ocr_lambda" {
   filename      = "${path.module}/../lambda_code/ocr_lambda.zip"
   function_name = "ocr_lambda"
@@ -43,6 +49,14 @@ resource "aws_lambda_function" "dynamodb_lambda" {
   runtime       = "python3.7"
 }
 
+resource "aws_lambda_function" "match_allergens_lambda" {
+  filename      = "${path.module}/../lambda_code/match_allergens_lambda.zip"
+  function_name = "match_allergens_lambda"
+  role          = aws_iam_role.lambda_role.arn
+  handler       = "match_allergens_lambda.match_allergens_handler"
+  runtime       = "python3.7"
+}
+
 resource "aws_lambda_layer_version" "tesseract_lambda_layer" {
   filename            = "${path.module}/../lambda_code/tesseract-layer.zip"
   layer_name          = "tesseract_layer"
@@ -60,7 +74,5 @@ resource "aws_lambda_permission" "apigw_lambda" {
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.ocr_lambda.function_name
   principal     = "apigateway.amazonaws.com"
-
-  # More: http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-control-access-using-iam-policies-to-invoke-api.html
-  source_arn = "arn:aws:execute-api:eu-west-1:260350295037:${aws_api_gateway_rest_api.allert-rest-api.id}/*/*/*"
+  source_arn    = "arn:aws:execute-api:eu-west-1:260350295037:${aws_api_gateway_rest_api.allert_rest_api.id}/*/*/*"
 }

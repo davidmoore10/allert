@@ -18,7 +18,14 @@ def ocr_handler(event, context):
     user_id = str(uuid.uuid1())
 
     # Body from API POST
-    body = json.loads(event['body'])
+    # body = json.loads(event['body'])
+    print(event)
+    body = event['body']
+    b64_str = body.encode('utf-8')
+    b64_bytes = base64.b64decode(b64_str)
+    decode_str = b64_bytes.decode('utf-')
+    body = json.loads(decode_str)
+    print(body)
     body_image64 = body['image64']
     allergies = body['user_allergies']
 
