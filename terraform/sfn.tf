@@ -4,23 +4,41 @@ resource "aws_sfn_state_machine" "allert_step_function" {
   type       = "EXPRESS"
   definition = <<EOF
 {
-   "Comment":"Allert State Machine",
-   "StartAt":"post_proc_lambda",
-   "States":{
-      "post_proc_lambda":{
-         "Type":"Task",
-         "Resource":"arn:aws:lambda:eu-west-1:260350295037:function:post_proc_lambda",
-         "Next":"dynamodb_lambda"
+   "Comment": "Allert State Machine",
+   "StartAt": "Parallel",
+   "States": {
+      "Parallel": {
+      "Type": "Parallel",
+      "Next": "match_allergens_lambda",
+      "Branches": [
+         {
+            "StartAt": "post_proc_lambda",
+            "States": {
+            "post_proc_lambda": {
+               "Type": "Task",
+               "Resource": "arn:aws:lambda:eu-west-1:260350295037:function:post_proc_lambda",
+               "InputPath": "$.ocr_text",
+               "End": true
+            }
+            }
+         },
+         {
+            "StartAt": "dynamodb_lambda",
+            "States": {
+            "dynamodb_lambda": {
+               "Type": "Task",
+               "Resource": "arn:aws:lambda:eu-west-1:260350295037:function:dynamodb_lambda",
+               "InputPath": "$.allergies",
+               "End": true
+            }
+            }
+         }
+      ]
       },
-      "dynamodb_lambda":{
-         "Type":"Task",
-         "Resource":"arn:aws:lambda:eu-west-1:260350295037:function:dynamodb_lambda",
-         "Next":"match_allergens_lambda"
-      },
-      "match_allergens_lambda":{
-         "Type":"Task",
-         "Resource":"arn:aws:lambda:eu-west-1:260350295037:function:match_allergens_lambda",
-         "End":true
+      "match_allergens_lambda": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:eu-west-1:260350295037:function:match_allergens_lambda",
+      "End": true
       }
    }
 }

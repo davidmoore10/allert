@@ -1,12 +1,23 @@
-import json
 import boto3
 from boto3.dynamodb.conditions import Key
 
+def dynamodb_query(allergy, table):
+    
+    # Perform dynamodb query
+    resp = table.query(
+        KeyConditionExpression=Key('allergy').eq(allergy)
+    )
+    
+    # Clean up and return allergens
+    strAlls = resp["Items"][0]["allergens"]
+    known_alls = strAlls.split(",")
+    return known_alls
+
 def dynamodb_handler(event, context):
+    
+    allergies = event
 
-    body = json.loads(event['body'])
-    allergies = body['allergies']
-
+    # Set up dynamodb query with boto3
     client = boto3.resource('dynamodb')
     table = client.Table('allergen_table')
 
@@ -14,19 +25,8 @@ def dynamodb_handler(event, context):
 
     # Query dynamodb for known allergens for each user allergy
     for allergy in allergies:
-        resp = table.query(
-            KeyConditionExpression=Key('allergy').eq(allergy)
-        )
         
-        strAlls = resp["Items"][0]["allergens"]
-        known_alls = strAlls.split(",")
-
         # Add to the output a dictionary of allergy with associated allergens
-        out[allergy] = known_alls
-        
-    body['allergensDict'] = out
-
-    return {
-        'statusCode': 200,
-        'body': json.dumps(body)
-    }
+        out[allergy] = dynamodb_query(allergy, table)
+    
+    return out

@@ -1,25 +1,21 @@
-import json
-import base64
 import re
 from collections import OrderedDict
       
 def post_proc_handler(event, context):
     
     # Load the OCRd text
-
-    text = event["ocr_text"]
+    text = event
     
-    # Remove non alpha chars, list, sort and eliminate duplicates
+    # Remove non alpha chars
     text = re.sub('[^a-zA-Z ]', "", text)
+    
+    # Split tokens into list
     text = text.split()
+    
+    # Sort list
     text.sort()
+    
+    # Remove duplicate terms
     text = list(OrderedDict.fromkeys(text))
 
-    # Return the result in json format
-    event["ocr_text"] = text
-    del event["user_id"]
-
-    return {
-        'statusCode': 200,
-        'body': json.dumps(event)
-    }
+    return text

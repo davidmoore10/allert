@@ -28,7 +28,6 @@ def ocr_handler(event, context):
     b64_bytes = base64.b64decode(b64_str)
     decode_str = b64_bytes.decode('utf-8')
     body = json.loads(decode_str)
-    print(body)
 
     body_image64 = body['image64']
     allergies = body['user_allergies']
