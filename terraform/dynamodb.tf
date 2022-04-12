@@ -1,9 +1,7 @@
 resource "aws_dynamodb_table" "allergen_table" {
-  name           = "allergen_table"
-  read_capacity  = 1
-  write_capacity = 1
-  hash_key       = "allergy"
-  range_key      = "allergens"
+  name      = "allergen_table"
+  hash_key  = "allergy"
+  range_key = "allergens"
 
   attribute {
     name = "allergy"

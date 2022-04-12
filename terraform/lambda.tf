@@ -1,9 +1,3 @@
-data "archive_file" "ocr_lambda_zip" {
-  type        = "zip"
-  source_dir  = "${path.module}/../lambda_code/ocr_lambda"
-  output_path = "${path.module}/../lambda_code/ocr_lambda.zip"
-}
-
 data "archive_file" "post_proc_lambda_zip" {
   type        = "zip"
   source_dir  = "${path.module}/../lambda_code/post_proc_lambda"
@@ -23,12 +17,10 @@ data "archive_file" "match_allergens_lambda_zip" {
 }
 
 resource "aws_lambda_function" "ocr_lambda" {
-  filename      = "${path.module}/../lambda_code/ocr_lambda.zip"
   function_name = "ocr_lambda"
   role          = aws_iam_role.lambda_role.arn
-  handler       = "ocr_lambda.ocr_handler"
-  runtime       = "python3.7"
-  layers        = [aws_lambda_layer_version.tesseract_lambda_layer.arn, aws_lambda_layer_version.pylibs_lambda_layer.arn]
+  package_type  = "Image"
+  image_uri     = "260350295037.dkr.ecr.eu-west-1.amazonaws.com/ocr_ecr:latest"
   timeout       = 60
   memory_size   = 2048
 }
