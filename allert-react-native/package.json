@@ -10,6 +10,9 @@
     "eject": "expo eject",
     "test": "jest --watchAll"
   },
+  "resolutions": {
+    "@types/react": "^17.0.38"
+  },
   "jest": {
     "preset": "jest-expo"
   },
