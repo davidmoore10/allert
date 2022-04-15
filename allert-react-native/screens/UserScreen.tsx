@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { auth, signOut } from '../firebase'
-import React, { useContext } from 'react'
+import React from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { useNavigation } from '@react-navigation/native';
 

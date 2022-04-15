@@ -7,19 +7,6 @@ import { useNavigation } from '@react-navigation/native';
 const LoginScreen = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [userData, setUserData] = useState();
-
-    const navigation = useNavigation();
-
-    // useEffect( () => {
-    //     const unsubscribe = onAuthStateChanged(auth, user => {
-    //         if (user) {
-    //             navigation.navigate("User")
-    //         }
-    //     })
-
-    //     return unsubscribe
-    // }, [])
 
     const handleSignUp = () => {
         createUserWithEmailAndPassword(auth, email, password).then(
