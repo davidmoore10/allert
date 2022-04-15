@@ -7,9 +7,11 @@ import { View, Text } from 'react-native';
 import useCachedResources from './hooks/useCachedResources';
 import useColorScheme from './hooks/useColorScheme';
 //import screens
-import LoginScreen from './screens/LoginScreen';
-import HomeScreen from './screens/HomeScreen';
-const Stack = createNativeStackNavigator();
+import UserStackScreen from './screens/UserStackScreen';
+import CameraScreen from './screens/CameraScreen';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
+const Tab = createBottomTabNavigator();
 
 
 export default function App() {
@@ -21,10 +23,21 @@ export default function App() {
   }
   else return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen options={{ headerShown: false }} name="Login" component={LoginScreen} />
-        <Stack.Screen name="Home" component={HomeScreen} />
-      </Stack.Navigator>
+      <Tab.Navigator>
+        <Tab.Screen
+          name="Camera"
+          component={CameraScreen}
+          options={{headerShown: false}}
+        />
+        <Tab.Screen
+          name="UserStack"
+          component={UserStackScreen}
+          options={{
+            headerShown: false,
+            title: "User"
+          }}
+        />
+      </Tab.Navigator>
     </NavigationContainer>
   );
 }
