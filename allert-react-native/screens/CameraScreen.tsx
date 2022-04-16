@@ -4,41 +4,73 @@ import { Camera } from 'expo-camera';
 
 const CameraScreen = () => {
 	const [hasPermission, setHasPermission] = useState<boolean | null>(null);
+	const [cameraRef, setCameraRef] = useState<Camera | null>(null)
 	const [type, setType] = useState(Camera.Constants.Type.back);
   
 	useEffect(() => {
-	  (async () => {
-		const { status } = await Camera.requestCameraPermissionsAsync();
-		setHasPermission(status === 'granted');
-	  })();
+		(async () => {
+			const { status } = await Camera.requestCameraPermissionsAsync();
+			setHasPermission(status === 'granted');
+		})();
 	}, []);
   
 	if (hasPermission === null) {
-	  return <View />;
+	  	return <View />;
 	}
 	if (hasPermission === false) {
-	  return <Text>No access to camera</Text>;
+	  	return <Text>No access to camera</Text>;
 	}
 	return (
-	  <View style={styles.container}>
-		<Camera style={styles.camera} type={type}>
-		  <View style={styles.buttonContainer}>
-			<TouchableOpacity
-			  style={styles.button}
-			  onPress={() => {
-				setType(
-				  type === Camera.Constants.Type.back
-					? Camera.Constants.Type.front
-					: Camera.Constants.Type.back
-				);
-			  }}>
-			  <Text style={styles.text}> Flip </Text>
-			</TouchableOpacity>
-		  </View>
-		</Camera>
-	  </View>
+		<View style={styles.container}>
+			<Camera
+			style={styles.camera}
+			type={type}
+			ref={ref => {
+				setCameraRef(ref)
+			}}>
+				<View style={styles.buttonContainer}>
+
+					<TouchableOpacity
+					style={styles.button}
+					onPress={() => {
+						setType(
+						type === Camera.Constants.Type.back
+							? Camera.Constants.Type.front
+							: Camera.Constants.Type.back
+						);
+					}}>
+						<Text style={styles.text}> Flip </Text>
+					</TouchableOpacity>
+
+					<TouchableOpacity style={{alignSelf: 'flex-end', backgroundColor: "red"}} onPress={async() => {
+						if(cameraRef) {
+							let photo = await cameraRef.takePictureAsync();
+							console.log('photo', photo);
+						}
+					}}>
+						<View style={styles.cameraButton}>
+							<View style={styles.cameraButtonOutline}>
+							</View>
+						</View>
+					</TouchableOpacity>
+
+					<TouchableOpacity
+					style={styles.button}
+					onPress={() => {
+						setType(
+						type === Camera.Constants.Type.back
+							? Camera.Constants.Type.front
+							: Camera.Constants.Type.back
+						);
+					}}>
+						<Text style={styles.text}> Flip </Text>
+					</TouchableOpacity>
+
+				</View>
+			</Camera>
+		</View>
 	);
-  }
+}
 
 export default CameraScreen
 
@@ -53,7 +85,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'transparent',
     flexDirection: 'row',
-    margin: 20,
+    margin: 10,
+	justifyContent: "space-between",
+	alignItems: "flex-end",
   },
   button: {
     flex: 0.1,
@@ -64,4 +98,22 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: 'white',
   },
+  cameraButton: {
+	borderWidth: 2,
+	borderRadius: 50,
+	borderColor: 'white',
+	height: 50,
+	width:50,
+	display: 'flex',
+	justifyContent: 'center',
+	alignItems: 'center',
+  },
+  cameraButtonOutline: {
+	borderWidth: 2,
+	borderRadius: 50,
+	borderColor: 'white',
+	height: 40,
+	width:40,
+	backgroundColor: 'white',
+  }
 })
