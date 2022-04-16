@@ -2,6 +2,7 @@
   "name": "allert-react-native",
   "version": "1.0.0",
   "main": "node_modules/expo/AppEntry.js",
+  "types": "lib/typescript/index.d.ts",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
@@ -27,6 +28,7 @@
     "expo-camera": "~12.1.2",
     "expo-constants": "~13.0.0",
     "expo-font": "~10.0.4",
+    "expo-image-picker": "~12.0.1",
     "expo-linking": "~3.0.0",
     "expo-random": "^12.1.2",
     "expo-splash-screen": "~0.14.0",

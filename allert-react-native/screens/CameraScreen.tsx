@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Dimensions, Platform } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Dimensions, Platform , Image} from 'react-native';
 import { Camera } from 'expo-camera';
+import * as ImagePicker from 'expo-image-picker';
 
 const CameraScreen = () => {
+	//image data
+	const [image, setImage] = useState(null);
+
+	//camera settigns and variables
 	const [hasPermission, setHasPermission] = useState<boolean | null>(null);
 	const [cameraRef, setCameraRef] = useState<Camera | null>(null)
 	const [type, setType] = useState(Camera.Constants.Type.back);
@@ -29,62 +34,79 @@ const CameraScreen = () => {
 	};
 
 	// set the camera ratio and padding.
-  // this code assumes a portrait mode screen
-  const prepareRatio = async () => {
-    let desiredRatio = '4:3';  // Start with the system default
-    // This issue only affects Android
-    if (Platform.OS === 'android') {
-		if (cameraRef) {
+  	// this code assumes a portrait mode screen
+  	const prepareRatio = async () => {
+		let desiredRatio = '4:3';  // Start with the system default
+		// This issue only affects Android
+		if (Platform.OS === 'android') {
+			if (cameraRef) {
 
-			const ratios = await cameraRef.getSupportedRatiosAsync();
+				const ratios = await cameraRef.getSupportedRatiosAsync();
 
-			// Calculate the width/height of each of the supported camera ratios
-			// These width/height are measured in landscape mode
-			// find the ratio that is closest to the screen ratio without going over
-			let distances = {};
-			let realRatios = {};
-			let minDistance = null;
+				// Calculate the width/height of each of the supported camera ratios
+				// These width/height are measured in landscape mode
+				// find the ratio that is closest to the screen ratio without going over
+				let distances = {};
+				let realRatios = {};
+				let minDistance = null;
 
-			for (const ratio of ratios) {
+				for (const ratio of ratios) {
 
-				const parts = ratio.split(':');
-				const realRatio: number = parseInt(parts[0]) / parseInt(parts[1]);
-				realRatios[ratio] = realRatio;
+					const parts = ratio.split(':');
+					const realRatio: number = parseInt(parts[0]) / parseInt(parts[1]);
+					realRatios[ratio] = realRatio;
 
-				// ratio can't be taller than screen, so we don't want an abs()
-				const distance = screenRatio - realRatio; 
-				distances[ratio] = realRatio;
-				
-				if (minDistance == null) {
-					minDistance = ratio;
-				} else {
-					if (distance >= 0 && distance < distances[minDistance]) {
-					minDistance = ratio;
+					// ratio can't be taller than screen, so we don't want an abs()
+					const distance = screenRatio - realRatio; 
+					distances[ratio] = realRatio;
+					
+					if (minDistance == null) {
+						minDistance = ratio;
+					} else {
+						if (distance >= 0 && distance < distances[minDistance]) {
+						minDistance = ratio;
+						}
 					}
 				}
+				// set the best match
+				desiredRatio = minDistance;
+				//  calculate the difference between the camera width and the screen height
+				const remainder = Math.floor(
+				(height - realRatios[desiredRatio] * width) / 2
+				);
+				// set the preview padding and preview ratio
+				setImagePadding(remainder);
+				setRatio(desiredRatio);
+				// Set a flag so we don't do this 
+				// calculation each time the screen refreshes
+				setIsRatioSet(true);
 			}
-			// set the best match
-			desiredRatio = minDistance;
-			//  calculate the difference between the camera width and the screen height
-			const remainder = Math.floor(
-			  (height - realRatios[desiredRatio] * width) / 2
-			);
-			// set the preview padding and preview ratio
-			setImagePadding(remainder);
-			setRatio(desiredRatio);
-			// Set a flag so we don't do this 
-			// calculation each time the screen refreshes
-			setIsRatioSet(true);
 		}
-    }
-  };
-  
+  	};
+
+	const pickImage = async () => {
+		// No permissions request is necessary for launching the image library
+		let result:any = await ImagePicker.launchImageLibraryAsync({
+		  mediaTypes: ImagePicker.MediaTypeOptions.All,
+		  allowsEditing: true,
+		  aspect: [4, 3],
+		  quality: 1,
+		});
+	
+		console.log(result);
+	
+		if (!result.cancelled) {
+		  setImage(result.uri);
+		}
+	  };
+
 	if (hasPermission === null) {
-	  	return <View />;
-	}
-	if (hasPermission === false) {
-	  	return <Text>No access to camera</Text>;
-	}
+		return <View />;
+  	}
+  	if (hasPermission === false) {
+		return <Text>No access to camera</Text>;
+  	}
+
 	return (
 		<View style={styles.container}>
 			<Camera
@@ -122,15 +144,12 @@ const CameraScreen = () => {
 					</TouchableOpacity>
 
 					<TouchableOpacity
-					style={styles.button}
-					onPress={() => {
-						setType(
-						type === Camera.Constants.Type.back
-							? Camera.Constants.Type.front
-							: Camera.Constants.Type.back
-						);
-					}}>
-						<Text style={styles.text}> Flip </Text>
+					onPress={pickImage}
+					>
+						<Text>
+						Pick an image from camera roll
+						</Text>
+      					{image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }}/>}
 					</TouchableOpacity>
 
 				</View>
