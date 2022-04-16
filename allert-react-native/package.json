@@ -24,6 +24,7 @@
     "expo": "~44.0.0",
     "expo-asset": "~8.4.4",
     "expo-auth-session": "^3.5.0",
+    "expo-camera": "~12.1.2",
     "expo-constants": "~13.0.0",
     "expo-font": "~10.0.4",
     "expo-linking": "~3.0.0",
@@ -38,7 +39,6 @@
     "react-native": "0.64.3",
     "react-native-safe-area-context": "3.3.2",
     "react-native-screens": "~3.10.1",
-    "react-native-vision-camera": "^2.13.2",
     "react-native-web": "0.17.1"
   },
   "devDependencies": {
