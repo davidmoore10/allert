@@ -1,56 +1,67 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Dimensions, Platform , Image} from 'react-native';
-import { Camera } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
+import * as FileSystem from 'expo-file-system';
+
+
+
 
 const CameraScreen = () => {
 	//image data
 	const [image, setImage] = useState(null);
 
-	//camera settigns and variables
-	const [hasPermission, setHasPermission] = useState<boolean | null>(null);
-	const [cameraRef, setCameraRef] = useState<Camera | null>(null)
-	const [type, setType] = useState(Camera.Constants.Type.back);
-  
-	//on load, check camera permissions
-	useEffect(() => {
-		(async () => {
-			const { status } = await Camera.requestCameraPermissionsAsync();
-			setHasPermission(status === 'granted');
-		})();
-	}, []);
-
 	const pickImage = async () => {
 		// No permissions request is necessary for launching the image library
-		let result:any = await ImagePicker.launchCameraAsync({
+		let result:any = await ImagePicker.launchImageLibraryAsync({
 		  mediaTypes: ImagePicker.MediaTypeOptions.All,
 		  allowsEditing: true,
-		  aspect: [4, 3],
-		  quality: 1,
+		  quality: 0.5,
+		  base64: true,
 		});
 	
 		console.log(result);
 	
 		if (!result.cancelled) {
-		  setImage(result.uri);
+		  setImage(result);
 		}
 	  };
 
 	const captureImage = async () => {
 	// No permissions request is necessary for launching the image library
 	let result:any = await ImagePicker.launchCameraAsync({
-		mediaTypes: ImagePicker.MediaTypeOptions.All,
 		allowsEditing: true,
-		aspect: [4, 3],
-		quality: 1,
+		quality: 0.5,
+		base64: true,
 	});
 
 	console.log(result);
 
 	if (!result.cancelled) {
-		setImage(result.uri);
+		setImage(result);
 	}
 	};
+
+	const getResultsFromApi = async () => {
+		console.log("attempting to send image:")
+		try {
+			fetch("https://bid4tm2l7g.execute-api.eu-west-1.amazonaws.com/default", {
+				method: 'POST',
+				headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+				"image64": image.base64,
+    			"user_allergies": ["celery", "gluten", "milk"]
+				}),
+			}).then((response) => response.json())
+			.then((responseJson) => {
+			console.log(responseJson);
+			})
+		} catch (error) {
+		  console.error(error);
+		}
+	  };
 
 	return (
 		<View style={styles.container}>
@@ -59,10 +70,10 @@ const CameraScreen = () => {
 
 				{image ? (
 					<TouchableOpacity
-					onPress={ () => {} }
+					onPress={ getResultsFromApi }
 					style={[styles.button, styles.buttonOutline]}
 					>
-						<Image source={{ uri: image }} style={{ width: 200, height: 200 }}/>
+						<Image source={{ uri: image.uri }} style={{ width: 200, height: 200 }}/>
 						<Text style={styles.buttonOutlineText}>Confirm Image</Text>
 					</TouchableOpacity>
 				) : (
@@ -76,13 +87,13 @@ const CameraScreen = () => {
 				}
 
 				<TouchableOpacity
-				onPress={ pickImage }
+				onPress={ captureImage }
 				style={styles.button}
 				>
 					<Text style={styles.buttonText}>Capture Image</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
-				onPress={ captureImage }
+				onPress={ pickImage }
 				style={[styles.button, styles.buttonOutline]}
 				>
 					<Text style={styles.buttonOutlineText}>Choose from Gallery</Text>
