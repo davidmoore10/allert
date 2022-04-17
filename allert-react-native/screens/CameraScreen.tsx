@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Dimensions, Platform , Image} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import * as FileSystem from 'expo-file-system';
-
-
 
 
 const CameraScreen = () => {
@@ -11,15 +8,12 @@ const CameraScreen = () => {
 	const [image, setImage] = useState(null);
 
 	const pickImage = async () => {
-		// No permissions request is necessary for launching the image library
+		// Requires Permissions.MEDIA_LIBRARY on iOS 10 only.
 		let result:any = await ImagePicker.launchImageLibraryAsync({
-		  mediaTypes: ImagePicker.MediaTypeOptions.All,
-		  allowsEditing: true,
-		  quality: 0.5,
+		  mediaTypes: ImagePicker.MediaTypeOptions.Images,
+		  quality: 0.6,
 		  base64: true,
 		});
-	
-		console.log(result);
 	
 		if (!result.cancelled) {
 		  setImage(result);
@@ -27,14 +21,11 @@ const CameraScreen = () => {
 	  };
 
 	const captureImage = async () => {
-	// No permissions request is necessary for launching the image library
+	// Requires Permissions.CAMERA. On Android and iOS 10 Permissions.CAMERA_ROLL is also required.
 	let result:any = await ImagePicker.launchCameraAsync({
-		allowsEditing: true,
-		quality: 0.5,
+		quality: 0.6,
 		base64: true,
 	});
-
-	console.log(result);
 
 	if (!result.cancelled) {
 		setImage(result);
@@ -52,7 +43,7 @@ const CameraScreen = () => {
 				},
 				body: JSON.stringify({
 				"image64": image.base64,
-    			"user_allergies": ["celery", "gluten", "milk"]
+    			"user_allergies": ["celery","crustaceans","eggs","fish","gluten","lupin","milk","molluscs","mustard","nuts","sesame seeds","soybeans","sulphites"]
 				}),
 			}).then((response) => response.json())
 			.then((responseJson) => {
@@ -61,7 +52,7 @@ const CameraScreen = () => {
 		} catch (error) {
 		  console.error(error);
 		}
-	  };
+	};
 
 	return (
 		<View style={styles.container}>

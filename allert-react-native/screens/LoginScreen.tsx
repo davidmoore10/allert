@@ -29,7 +29,7 @@ const LoginScreen = () => {
     return (
         <KeyboardAvoidingView
             style={styles.container}
-            behavior="padding"
+            behavior="height"
         >
         <View style={styles.inputContainer}>
             <TextInput
@@ -52,13 +52,17 @@ const LoginScreen = () => {
             onPress={ handleLogin }
             style={styles.button}
             >
-                <Text style={styles.buttonText}>Login</Text>
+                <Text style={styles.buttonText}>
+                    Login
+                </Text>
             </TouchableOpacity>
             <TouchableOpacity
             onPress={ handleSignUp }
             style={[styles.button, styles.buttonOutline]}
             >
-                <Text style={styles.buttonOutlineText}>Register</Text>
+                <Text style={styles.buttonOutlineText}>
+                    Register
+                </Text>
             </TouchableOpacity>
         </View>
 

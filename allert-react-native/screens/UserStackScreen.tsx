@@ -30,12 +30,13 @@ const UserStackScreen = () => {
     return (
             <Stack.Navigator>
                 {userData === null ? (
-                // No token found, user isn't signed in
+                // No user found, user isn't signed in
                 <Stack.Screen
                     name="Login"
                     component={LoginScreen}
                     options={{
                     title: 'Login',
+                    headerShown: false,
                     }}
                 />
                 ) : (
