@@ -1,6 +1,7 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { auth, signOut } from '../firebase'
-import React from 'react'
+import { auth, signOut } from '../firebase';
+import React from 'react';
+import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { useNavigation } from '@react-navigation/native';
 
 const UserScreen = () => {
@@ -15,6 +16,7 @@ const UserScreen = () => {
 
     return (
         <View style={styles.container}>
+
             <View style={styles.buttonContainer}>
                 <TouchableOpacity
                 onPress={ handleLogout }
