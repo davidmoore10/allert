@@ -8,62 +8,61 @@ const UserScreen = () => {
     const [checkListState, setCheckListState] = useState([
             {
                 "name": "celery",
-                "enabled": false,
+                "enabled": true
             },
             {
                 "name": "crustaceans",
-                "enabled": false
+                "enabled": true
             },
             {
                 "name": "eggs",
-                "enabled": false
+                "enabled": true
             },
             {
                 "name": "fish",
-                "enabled": false
+                "enabled": true
             },
             {
                 "name": "gluten",
-                "enabled": false
+                "enabled": true
             },
             {
                 "name": "lupin",
-                "enabled": false
+                "enabled": true
             },
             {
                 "name": "milk",
-                "enabled": false
+                "enabled": true
             },
             {
                 "name": "molluscs",
-                "enabled": false
+                "enabled": true
             },
             {
                 "name": "mustard",
-                "enabled": false
+                "enabled": true
             },
             {
                 "name": "nuts",
-                "enabled": false
+                "enabled": true
             },
             {
                 "name": "sesame seeds",
-                "enabled": false
+                "enabled": true
             },
             {
                 "name": "soybeans",
-                "enabled": false
+                "enabled": true
             },
             {
                 "name": "sulphites",
-                "enabled": false
+                "enabled": true
             },
         ])
 
     useEffect( () => {
-        //retrieveUserSettingsFromDatabase();
-        console.log(checkListState)
-    }, [checkListState])
+        retrieveUserSettingsFromDatabase();
+    }, [])
 
     const handleLogout = () => {
         signOut(auth).then(
@@ -106,14 +105,11 @@ const UserScreen = () => {
     return (
         <ScrollView style={styles.scroll}>
             <View style={styles.container}>
-                <View style={styles.historyContainer}>
-                    <TouchableOpacity
-                    style={styles.button}
-                    >
-                        <Text style={styles.buttonText}>
-                            AAAAAAAAAAAAAAAAA
+
+                <View style={styles.sectionHeader}>
+                        <Text style={styles.heading}>
+                            Allergen Flags
                         </Text>
-                    </TouchableOpacity>
                 </View>
 
                 <View style={styles.checkboxContainer}>
@@ -140,7 +136,9 @@ const UserScreen = () => {
                         </View>
                         
                     ))}
+                </View>
 
+                <View style={styles.buttonContainer}>
                     <TouchableOpacity
                         onPress={ () => updateUserSettingsInDatabase(auth.currentUser.uid, parseUserSettings(checkListState)) }
                         style={styles.updateButton}
@@ -149,9 +147,6 @@ const UserScreen = () => {
                             Update Settings
                         </Text>
                     </TouchableOpacity>
-                </View>
-
-                <View style={styles.buttonContainer}>
 
                     <TouchableOpacity
                     onPress={ handleLogout }
@@ -172,20 +167,29 @@ export default UserScreen
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingBottom: 400,
+        paddingTop: StatusBar.currentHeight,
     },
     scroll: {
     },
+    sectionHeader: {
+        alignSelf: "center",
+        width: "90%",
+        borderBottomWidth: 0.5,
+        borderColor: "#c5c5c5",
+    },
+    heading: {
+        fontSize: 20,
+        textAlign: "center",
+    },
     buttonContainer: {
-        backgroundColor: "yellow",
         justifyContent: "center",
         alignItems: "center",
     },
     checkboxContainer: {
-        width: "100%",
-        flexDirection: "column",
+        width: "90%",
         justifyContent: "center",
         alignContent: "center",
+        alignSelf: "center",
     },
     historyContainer: {
         backgroundColor: "yellow",
@@ -236,9 +240,7 @@ const styles = StyleSheet.create({
     checkbox: {
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "flex-start",
         padding: 10,
-        
     },
     switch: {
         transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
