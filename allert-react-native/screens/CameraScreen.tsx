@@ -125,15 +125,15 @@ const CameraScreen = () => {
 
 					<TouchableOpacity
 						onPress={ captureImage }
-						style={[styles.button, styles.pastelPurple]}
+						style={styles.button}
 						>
 							<Text style={styles.buttonText}>Capture Image</Text>
 						</TouchableOpacity>
 						<TouchableOpacity
 						onPress={ pickImage }
-						style={[styles.button, styles.pastelRed]}
+						style={[styles.button, styles.buttonOutline]}
 						>
-							<Text style={styles.buttonText}>Choose from Gallery</Text>
+							<Text style={styles.buttonOutlineText}>Choose from Gallery</Text>
 					</TouchableOpacity>
 				</View>
 
@@ -144,9 +144,9 @@ const CameraScreen = () => {
 				<View style={styles.buttonContainer}>	
 					<TouchableOpacity
 					onPress={ () => {} }
-					style={[styles.button, styles.pastelRed]}
+					style={[styles.button, styles.buttonOutline]}
 					>
-						<Text style={styles.buttonText}>Help</Text>
+						<Text style={styles.buttonOutlineText}>Help</Text>
 					</TouchableOpacity>
 				</View>
 		</View>
@@ -167,11 +167,28 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     button: {
+		backgroundColor: "#0782f9",
         width: "100%",
         padding: 15,
 		margin: 5,
         borderRadius: 10,
         alignItems: "center",
+    },
+	buttonOutline: {
+        backgroundColor: "white",
+        marginTop: 5,
+        borderColor: "#0782f9",
+        borderWidth: 2,
+    },
+    buttonText: {
+        color: "white",
+        fontWeight: "700",
+        fontSize: 16,
+    },
+    buttonOutlineText: {
+        color: "#0782f9",
+        fontWeight: "700",
+        fontSize: 16,
     },
 	pastelPurple: {
 		backgroundColor: "#a972ca",
@@ -179,11 +196,6 @@ const styles = StyleSheet.create({
 	pastelRed: {
 		backgroundColor: "#ff7f84",
 	},
-    buttonText: {
-        color: "white",
-        fontWeight: "700",
-        fontSize: 16,
-    },
 	imagePreviewContainer: {
         backgroundColor: "#c5c5c5",
 		justifyContent: "center",
