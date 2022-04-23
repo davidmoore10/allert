@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image, Alert} from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useFocusEffect } from '@react-navigation/native';
 import { auth, onAuthStateChanged } from '../firebase';
-import { getDatabase, ref, set, onValue } from 'firebase/database';
+import { getDatabase, ref, onValue } from 'firebase/database';
 import * as ImagePicker from 'expo-image-picker';
 
 
 const CameraScreen = () => {
 	//image data
+	const defaultFlags = ["celery","crustaceans","eggs","fish","gluten","lupin","milk","molluscs","mustard","nuts","sesame seeds","soybeans","sulphites"];
 	const [image, setImage] = useState(null);
-	const [userFlags, setUserFlags] = useState(
-		["celery","crustaceans","eggs","fish","gluten","lupin","milk","molluscs","mustard","nuts","sesame seeds","soybeans","sulphites"]
-	);
+	const [userFlags, setUserFlags] = useState(defaultFlags);
 	const [userData, setUserData]: any = useState(null);
 
     useFocusEffect(
@@ -19,14 +19,21 @@ const CameraScreen = () => {
 			const unsubscribe = onAuthStateChanged(auth, user => {
 				if (user) {
 					setUserData(user)
-					retrieveUserSettingsFromDatabase()
+					retrieveUserSettingsFromDatabase(user)
 				}
 				else {
 					setUserData(null);
+					// Alert.alert('No User Logged In!', 'All allergens are flagged in images by default. You must be logged in to change these settings from the user page.', [
+					// 	{
+					// 	  text: 'Close',
+					// 	  style: 'cancel',
+					// 	},
+					//   ]);
+					setUserFlags(defaultFlags);
 				}
 			})
 			return unsubscribe
-		}, [auth.currentUser])
+		}, [])
 	);
 
 	const pickImage = async () => {
@@ -36,7 +43,6 @@ const CameraScreen = () => {
 		  quality: 0.6,
 		  base64: true,
 		});
-	
 		if (!result.cancelled) {
 		  setImage(result);
 		}
@@ -76,10 +82,9 @@ const CameraScreen = () => {
 		}
 	};
 
-	const retrieveUserSettingsFromDatabase = () => {
-		if (userData != null) {
+	const retrieveUserSettingsFromDatabase = (user) => {
 			const db = getDatabase();
-			const userId = auth.currentUser.uid;
+			const userId = user.uid;
 			const reference = ref(db, "users/" + userId + "/userFlags");
 	
 			onValue(reference, (snapshot) => {
@@ -91,61 +96,59 @@ const CameraScreen = () => {
 						));
 				setUserFlags(result);
 			});
-		}
-
-		else {
-			Alert.alert('No User Logged In!', 'All allergens are flagged in images by default. You must be logged in to change these settings from the user page.', [
-				{
-				  text: 'Cancel',
-				  onPress: () => console.log('Cancel Pressed'),
-				  style: 'cancel',
-				},
-			  ]);
-		}
     }
 
 	return (
 		<View style={styles.container}>
 
-			<View style={styles.buttonContainer}>
+				<View style={styles.buttonContainer}>
+					<View style={styles.imagePreviewContainer}>
+						{ image ? (
+							<TouchableOpacity
+							onPress={ getResultsFromApi }
+							style={styles.imagePreviewButton}
+							>
+								<Image source={{ uri: image.uri }} style={styles.imagePreview}/>
+								<LinearGradient
+								colors={[ 'rgba(255,255,255,0)', 'rgba(0,0,0,1)']}
+								style={styles.textGradient}
+								>
+									<Text style={styles.imageButtonText}>Press to Confirm Image</Text>
+								</LinearGradient>
+							</TouchableOpacity>
+						) : (
+							
+						<Text style={styles.imagePreviewText}>No Image</Text>
+						)
+						}
+					</View>
 
-				{image ? (
 					<TouchableOpacity
-					onPress={ getResultsFromApi }
-					style={[styles.button, styles.buttonOutline]}
-					>
-						<Image source={{ uri: image.uri }} style={{ width: 200, height: 200 }}/>
-						<Text style={styles.buttonOutlineText}>Confirm Image</Text>
+						onPress={ captureImage }
+						style={[styles.button, styles.pastelPurple]}
+						>
+							<Text style={styles.buttonText}>Capture Image</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+						onPress={ pickImage }
+						style={[styles.button, styles.pastelRed]}
+						>
+							<Text style={styles.buttonText}>Choose from Gallery</Text>
 					</TouchableOpacity>
-				) : (
+				</View>
+
+				<View style={styles.buttonContainer}>
+					
+				</View>
+
+				<View style={styles.buttonContainer}>	
 					<TouchableOpacity
 					onPress={ () => {} }
-					style={[styles.button, styles.buttonOutline]}
+					style={[styles.button, styles.pastelRed]}
 					>
-						<Text style={styles.buttonText}>No image</Text>
+						<Text style={styles.buttonText}>Help</Text>
 					</TouchableOpacity>
-				)
-				}
-
-				<TouchableOpacity
-				onPress={ captureImage }
-				style={styles.button}
-				>
-					<Text style={styles.buttonText}>Capture Image</Text>
-				</TouchableOpacity>
-				<TouchableOpacity
-				onPress={ pickImage }
-				style={[styles.button, styles.buttonOutline]}
-				>
-					<Text style={styles.buttonOutlineText}>Choose from Gallery</Text>
-				</TouchableOpacity>
-				<TouchableOpacity
-				onPress={ () => {} }
-				style={[styles.button, styles.buttonOutline]}
-				>
-					<Text style={styles.buttonOutlineText}>Help</Text>
-				</TouchableOpacity>
-        	</View>
+				</View>
 		</View>
 	);
 }
@@ -155,46 +158,67 @@ export default CameraScreen
 const styles = StyleSheet.create({
 	container: {
         flex: 1,
-        justifyContent: "center",
         alignItems: "center",
-    },
-    inputContainer: {
-        width: "80%"
-    },
-    input: {
-        backgroundColor: "white",
-        paddingHorizontal: 15,
-        paddingVertical: 10,
-        borderRadius: 10,
-        marginTop: 5,
+		justifyContent: "space-around",
     },
     buttonContainer: {
-        width: "60%",
-        justifyContent: "center",
+        width: "90%",
+		maxHeight: "50%",
         alignItems: "center",
-        marginTop: 40,
     },
     button: {
-        backgroundColor: "#0782f9",
         width: "100%",
         padding: 15,
+		margin: 5,
         borderRadius: 10,
         alignItems: "center",
     },
-    buttonOutline: {
-        backgroundColor: "white",
-        marginTop: 5,
-        borderColor: "#0782f9",
-        borderWidth: 2,
-    },
+	pastelPurple: {
+		backgroundColor: "#a972ca",
+	},
+	pastelRed: {
+		backgroundColor: "#ff7f84",
+	},
     buttonText: {
         color: "white",
         fontWeight: "700",
         fontSize: 16,
     },
-    buttonOutlineText: {
-        color: "#0782f9",
-        fontWeight: "700",
-        fontSize: 16,
+	imagePreviewContainer: {
+        backgroundColor: "#c5c5c5",
+		justifyContent: "center",
+		width: "100%",
+		height: "100%",
+		borderRadius: 15,
+    },
+	imagePreview: {
+		width: '100%',
+		height: '100%',
+		borderRadius: 15,
+    },
+	imagePreviewButton: {
+		height: "100%",
+		width: "100%",
+    },
+	imagePreviewText: {
+        fontSize: 20,
+		color: "black",
+		textAlign: "center",
+		fontWeight: "bold",
+    },
+	imageButtonText: {
+        fontSize: 20,
+		color: "white",
+		textAlign: "center",
+		fontWeight: "bold",
+    },
+	textGradient: {
+		position: "absolute",
+		bottom: 0,
+		width: "100%",
+		height: "15%",
+		justifyContent: "center",
+		borderBottomLeftRadius: 15,
+		borderBottomRightRadius: 15,
     },
 })

@@ -2,7 +2,8 @@ import { StyleSheet, Text, TouchableOpacity, View, Switch, ScrollView, StatusBar
 import { auth, signOut } from '../firebase';
 import { getDatabase, ref, set, onValue } from 'firebase/database';
 import React, { useState, useEffect }from 'react';
-import { Ionicons, AntDesign } from '@expo/vector-icons';
+import { useFocusEffect } from '@react-navigation/native';
+import { AntDesign } from '@expo/vector-icons';
 
 const UserScreen = () => {
     const [checkListState, setCheckListState] = useState([
@@ -60,9 +61,11 @@ const UserScreen = () => {
             },
         ])
 
-    useEffect( () => {
-        retrieveUserSettingsFromDatabase();
+    useFocusEffect(
+        React.useCallback(() => {
+        retrieveUserSettingsFromDatabase()
     }, [])
+    );
 
     const handleLogout = () => {
         signOut(auth).then(
@@ -116,7 +119,7 @@ const UserScreen = () => {
                     {checkListState.map((item, index) => (
                         <View key={index} style={styles.checkbox}>
                             <Switch
-                                trackColor={{ false: "#666B7A", true: "#19bc8c" }}
+                                trackColor={{ false: "#ff7f84", true: "#19bc8c" }}
                                 thumbColor={item.enabled ? "#ababac" : "#ababac"}
                                 ios_backgroundColor="#3e3e3e"
                                 style={styles.switch}
@@ -176,10 +179,12 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         width: "90%",
         borderBottomWidth: 0.5,
+        padding: 5,
         borderColor: "#c5c5c5",
     },
     heading: {
-        fontSize: 20,
+        fontSize: 24,
+        fontWeight: "bold",
         textAlign: "center",
     },
     buttonContainer: {
@@ -206,7 +211,7 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-end'
     },
     signOutButton: {
-        backgroundColor: "#ff7f84",
+        backgroundColor: "#ffa268",
         width: "60%",
         marginTop: 5,
         padding: 15,
