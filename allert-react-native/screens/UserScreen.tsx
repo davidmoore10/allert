@@ -1,10 +1,8 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { auth, signOut } from '../firebase';
-import { getDatabase, ref, onValue, set, push } from 'firebase/database';
+import { getDatabase, ref, set, onValue } from 'firebase/database';
 import React, { useState, useEffect }from 'react';
 import { useNavigation } from '@react-navigation/native';
-
-import Checkbox from 'expo-checkbox';
 
 const UserScreen = () => {
     const [checkListState, setCheckListState] = useState([
@@ -63,8 +61,8 @@ const UserScreen = () => {
         ])
 
     useEffect( () => {
-        parseUserSettings(checkListState);
-    }, [checkListState])
+        retrieveUserSettingsFromDatabase();
+    }, [])
 
     const handleLogout = () => {
         signOut(auth).then(
@@ -80,8 +78,22 @@ const UserScreen = () => {
         return(JSON.stringify(reducedList))
     }
 
-    const retreiveUserSettingsFromDatabase = () => {
-        const arr = Object.keys(obj).map(key => ({ [key]: obj[key] }))
+    const retrieveUserSettingsFromDatabase = () => {
+        const db = getDatabase();
+        const userId = auth.currentUser.uid;
+        const reference = ref(db, "users/" + userId + "/userFlags");
+
+        onValue(reference, (snapshot) => {
+            const data = JSON.parse(snapshot.val());
+            let result = Object.keys(data)
+                   .map(key => (
+                        {
+                            "name": key,
+                            "enabled": data[key]
+                        }
+                    ));
+            setCheckListState(result);
+        });
     }
 
     const updateUserSettingsInDatabase = (userId: string, settings: string)  => {
