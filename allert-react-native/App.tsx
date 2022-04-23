@@ -6,6 +6,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { View, Text } from 'react-native';
 import useCachedResources from './hooks/useCachedResources';
 import useColorScheme from './hooks/useColorScheme';
+//expo components
+import { Ionicons, AntDesign } from '@expo/vector-icons';
 //import screens
 import UserStackScreen from './screens/UserStackScreen';
 import CameraScreen from './screens/CameraScreen';
@@ -27,14 +29,19 @@ export default function App() {
         <Tab.Screen
           name="Camera"
           component={CameraScreen}
-          options={{headerShown: false}}
+          options={{
+            headerShown: false,
+            title: "Camera",
+            tabBarIcon: ( { color, size }) => (<Ionicons name="camera" color={color} size={size} /> ),
+          }}
         />
         <Tab.Screen
           name="UserStack"
           component={UserStackScreen}
           options={{
             headerShown: false,
-            title: "User"
+            title: "User Settings",
+            tabBarIcon: ( { color, size }) => (<AntDesign name="user" color={color} size={size} /> ),
           }}
         />
       </Tab.Navigator>

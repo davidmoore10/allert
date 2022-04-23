@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image, Alert} from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { auth, onAuthStateChanged } from '../firebase';
 import { getDatabase, ref, set, onValue } from 'firebase/database';
 import * as ImagePicker from 'expo-image-picker';
@@ -13,18 +14,20 @@ const CameraScreen = () => {
 	);
 	const [userData, setUserData]: any = useState(null);
 
-    useEffect( () => {
-        const unsubscribe = onAuthStateChanged(auth, user => {
-            if (user) {
-                setUserData(user);
-            }
-            else {
-                setUserData(null);
-            }
-        })
-		retrieveUserSettingsFromDatabase()
-        return unsubscribe
-    }, [])
+    useFocusEffect(
+		React.useCallback(() => {
+			const unsubscribe = onAuthStateChanged(auth, user => {
+				if (user) {
+					setUserData(user)
+					retrieveUserSettingsFromDatabase()
+				}
+				else {
+					setUserData(null);
+				}
+			})
+			return unsubscribe
+		}, [auth.currentUser])
+	);
 
 	const pickImage = async () => {
 		// Requires Permissions.MEDIA_LIBRARY on iOS 10 only.

@@ -2,7 +2,7 @@ import { StyleSheet, Text, TouchableOpacity, View, Switch, ScrollView, StatusBar
 import { auth, signOut } from '../firebase';
 import { getDatabase, ref, set, onValue } from 'firebase/database';
 import React, { useState, useEffect }from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { Ionicons, AntDesign } from '@expo/vector-icons';
 
 const UserScreen = () => {
     const [checkListState, setCheckListState] = useState([
@@ -133,6 +133,7 @@ const UserScreen = () => {
                             <Text style={styles.switchLabel}>
                             { item.name.replace(/(^\w|\s\w)/g, m => m.toUpperCase()) }
                             </Text>
+                            {item.enabled && <AntDesign style={styles.switchLabelIcon} name="flag" size={24} />}
                         </View>
                         
                     ))}
@@ -249,5 +250,8 @@ const styles = StyleSheet.create({
         marginLeft: 20,
         fontSize: 16,
         fontWeight: "bold",
+    },
+    switchLabelIcon: {
+        marginLeft: "auto"
     },
 })
