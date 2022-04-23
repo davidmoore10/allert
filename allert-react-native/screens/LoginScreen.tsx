@@ -2,7 +2,9 @@ import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, Vi
 import { useEffect, useState } from 'react';
 import React from 'react';
 import { auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from '../firebase';
+import { getDatabase, ref, onValue, set, push } from 'firebase/database';
 import { useNavigation } from '@react-navigation/native';
+import { Auth, User, UserCredential } from 'firebase/auth';
 
 const LoginScreen = () => {
     const [email, setEmail] = useState("");
@@ -12,6 +14,7 @@ const LoginScreen = () => {
         createUserWithEmailAndPassword(auth, email, password).then(
             userCredentials => {
                 const user = userCredentials.user
+                initializeUserInDatabase(user.uid);
                 console.log("Registered with:", user.email)
             })
             .catch(error => alert(error.message))
@@ -24,6 +27,30 @@ const LoginScreen = () => {
                 console.log("Logged in with:", user.email)
             })
             .catch(error => alert(error.message))
+    }
+
+    
+    const initializeUserInDatabase = (userId: string)  => {
+        const db = getDatabase();
+        const reference = ref(db, 'users/' + userId);
+        
+        push(reference, { userFlags:
+            {
+                "celery" : "false",
+                "crustaceans" : "false",
+                "eggs" : "false",
+                "fish" : "false",
+                "gluten" : "false",
+                "lupin" : "false",
+                "milk" : "false",
+                "molluscs" : "false",
+                "mustard" : "false",
+                "nuts" : "false",
+                "sesame seeds" : "false",
+                "soybeans" : "false",
+                "sulphites" : "false",
+            }
+        });
     }
 
     return (

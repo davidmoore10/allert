@@ -21,15 +21,15 @@ const CameraScreen = () => {
 	  };
 
 	const captureImage = async () => {
-	// Requires Permissions.CAMERA. On Android and iOS 10 Permissions.CAMERA_ROLL is also required.
-	let result:any = await ImagePicker.launchCameraAsync({
-		quality: 0.6,
-		base64: true,
-	});
+		// Requires Permissions.CAMERA. On Android and iOS 10 Permissions.CAMERA_ROLL is also required.
+		let result:any = await ImagePicker.launchCameraAsync({
+			quality: 0.6,
+			base64: true,
+		});
 
-	if (!result.cancelled) {
-		setImage(result);
-	}
+		if (!result.cancelled) {
+			setImage(result);
+		}
 	};
 
 	const getResultsFromApi = async () => {

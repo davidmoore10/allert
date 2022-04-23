@@ -1,5 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { auth, signOut } from '../firebase';
+import { getDatabase, ref, onValue, set, push } from 'firebase/database';
 import React, { useState, useEffect }from 'react';
 import { useNavigation } from '@react-navigation/native';
 
@@ -61,6 +62,10 @@ const UserScreen = () => {
             },
         ])
 
+    useEffect( () => {
+        parseUserSettings(checkListState);
+    }, [checkListState])
+
     const handleLogout = () => {
         signOut(auth).then(
             () => {
@@ -69,30 +74,55 @@ const UserScreen = () => {
             .catch(error => alert(error.message))
     }
 
+    const parseUserSettings = (list) => {
+        let reducedList = list.reduce(
+            (obj, item) => Object.assign(obj, { [item.name]: item.enabled }), {});
+        return(JSON.stringify(reducedList))
+    }
+
+    const retreiveUserSettingsFromDatabase = () => {
+        const arr = Object.keys(obj).map(key => ({ [key]: obj[key] }))
+    }
+
+    const updateUserSettingsInDatabase = (userId: string, settings: string)  => {
+        const db = getDatabase();
+        const reference = ref(db, 'users/' + userId);
+        set(reference, { userFlags: settings});
+    }
+
     return (
         <View style={styles.container}>
 
             <View style={styles.buttonContainer}>
-            {checkListState.map((item, index) => (
-                <TouchableOpacity
-                    key={index}
-                    style={[styles.checkbox, item.enabled ? {backgroundColor: "green"} : {backgroundColor:"red"}]}
-                    onPress={ () => {setCheckListState(
-                        checkListState.map((obj, i) => 
-                            i === index ? 
-                            {...obj, "enabled" : !item.enabled} 
-                            : obj 
-                    ))
+                {checkListState.map((item, index) => (
+                    <TouchableOpacity
+                        key={index}
+                        style={[styles.checkbox, item.enabled ? {backgroundColor: "green"} : {backgroundColor:"red"}]}
+                        onPress={ () => {setCheckListState(
+                            checkListState.map((obj, i) => 
+                                i === index ? 
+                                {...obj, "enabled" : !item.enabled} 
+                                : obj 
+                        ))
+                        }
                     }
-                }
-                >
-                <Text>{item.name}</Text>
-                </TouchableOpacity>
-      ))}
-                
+                    >
+                    <Text>{item.name}</Text>
+                    </TouchableOpacity>
+                ))}
             </View>
 
             <View style={styles.buttonContainer}>
+
+                <TouchableOpacity
+                onPress={ () => updateUserSettingsInDatabase(auth.currentUser.uid, parseUserSettings(checkListState)) }
+                style={styles.button}
+                >
+                    <Text style={styles.buttonText}>
+                        Update Settings
+                    </Text>
+                </TouchableOpacity>
+
                 <TouchableOpacity
                 onPress={ handleLogout }
                 style={styles.button}

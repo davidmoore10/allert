@@ -9,8 +9,6 @@ import UserScreen from './UserScreen';
 
 const Stack = createNativeStackNavigator();
 
-
-
 const UserStackScreen = () => {
     const [userData, setUserData]: any = useState(null);
 
