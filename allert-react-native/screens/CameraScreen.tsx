@@ -1,11 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image, Alert} from 'react-native';
+import { auth, onAuthStateChanged } from '../firebase';
+import { getDatabase, ref, set, onValue } from 'firebase/database';
 import * as ImagePicker from 'expo-image-picker';
 
 
 const CameraScreen = () => {
 	//image data
 	const [image, setImage] = useState(null);
+	const [userFlags, setUserFlags] = useState(
+		["celery","crustaceans","eggs","fish","gluten","lupin","milk","molluscs","mustard","nuts","sesame seeds","soybeans","sulphites"]
+	);
+	const [userData, setUserData]: any = useState(null);
+
+    useEffect( () => {
+        const unsubscribe = onAuthStateChanged(auth, user => {
+            if (user) {
+                setUserData(user);
+            }
+            else {
+                setUserData(null);
+            }
+        })
+		retrieveUserSettingsFromDatabase()
+        return unsubscribe
+    }, [])
 
 	const pickImage = async () => {
 		// Requires Permissions.MEDIA_LIBRARY on iOS 10 only.
@@ -33,7 +52,7 @@ const CameraScreen = () => {
 	};
 
 	const getResultsFromApi = async () => {
-		console.log("attempting to send image:")
+		console.log("attempting to send image... searching for :", userFlags)
 		try {
 			fetch("https://bid4tm2l7g.execute-api.eu-west-1.amazonaws.com/default", {
 				method: 'POST',
@@ -43,7 +62,7 @@ const CameraScreen = () => {
 				},
 				body: JSON.stringify({
 				"image64": image.base64,
-    			"user_allergies": ["celery","crustaceans","eggs","fish","gluten","lupin","milk","molluscs","mustard","nuts","sesame seeds","soybeans","sulphites"]
+    			"user_allergies": userFlags,
 				}),
 			}).then((response) => response.json())
 			.then((responseJson) => {
@@ -53,6 +72,34 @@ const CameraScreen = () => {
 		  console.error(error);
 		}
 	};
+
+	const retrieveUserSettingsFromDatabase = () => {
+		if (userData != null) {
+			const db = getDatabase();
+			const userId = auth.currentUser.uid;
+			const reference = ref(db, "users/" + userId + "/userFlags");
+	
+			onValue(reference, (snapshot) => {
+				const data = JSON.parse(snapshot.val());
+				let result = Object.keys(data)
+						.filter( key => data[key] != false )
+						   .map(key => (
+							key
+						));
+				setUserFlags(result);
+			});
+		}
+
+		else {
+			Alert.alert('No User Logged In!', 'All allergens are flagged in images by default. You must be logged in to change these settings from the user page.', [
+				{
+				  text: 'Cancel',
+				  onPress: () => console.log('Cancel Pressed'),
+				  style: 'cancel',
+				},
+			  ]);
+		}
+    }
 
 	return (
 		<View style={styles.container}>

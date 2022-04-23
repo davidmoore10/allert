@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View, Switch, ScrollView, StatusBar } from 'react-native'
 import { auth, signOut } from '../firebase';
 import { getDatabase, ref, set, onValue } from 'firebase/database';
 import React, { useState, useEffect }from 'react';
@@ -8,7 +8,7 @@ const UserScreen = () => {
     const [checkListState, setCheckListState] = useState([
             {
                 "name": "celery",
-                "enabled": false
+                "enabled": false,
             },
             {
                 "name": "crustaceans",
@@ -61,8 +61,9 @@ const UserScreen = () => {
         ])
 
     useEffect( () => {
-        retrieveUserSettingsFromDatabase();
-    }, [])
+        //retrieveUserSettingsFromDatabase();
+        console.log(checkListState)
+    }, [checkListState])
 
     const handleLogout = () => {
         signOut(auth).then(
@@ -89,7 +90,7 @@ const UserScreen = () => {
                    .map(key => (
                         {
                             "name": key,
-                            "enabled": data[key]
+                            "enabled": data[key],
                         }
                     ));
             setCheckListState(result);
@@ -103,48 +104,66 @@ const UserScreen = () => {
     }
 
     return (
-        <View style={styles.container}>
-
-            <View style={styles.buttonContainer}>
-                {checkListState.map((item, index) => (
+        <ScrollView style={styles.scroll}>
+            <View style={styles.container}>
+                <View style={styles.historyContainer}>
                     <TouchableOpacity
-                        key={index}
-                        style={[styles.checkbox, item.enabled ? {backgroundColor: "green"} : {backgroundColor:"red"}]}
-                        onPress={ () => {setCheckListState(
-                            checkListState.map((obj, i) => 
-                                i === index ? 
-                                {...obj, "enabled" : !item.enabled} 
-                                : obj 
-                        ))
-                        }
-                    }
+                    style={styles.button}
                     >
-                    <Text>{item.name}</Text>
+                        <Text style={styles.buttonText}>
+                            AAAAAAAAAAAAAAAAA
+                        </Text>
                     </TouchableOpacity>
-                ))}
+                </View>
+
+                <View style={styles.checkboxContainer}>
+                    {checkListState.map((item, index) => (
+                        <View key={index} style={styles.checkbox}>
+                            <Switch
+                                trackColor={{ false: "#666B7A", true: "#19bc8c" }}
+                                thumbColor={item.enabled ? "#ababac" : "#ababac"}
+                                ios_backgroundColor="#3e3e3e"
+                                style={styles.switch}
+                                onValueChange={ () => {setCheckListState(
+                                            checkListState.map((obj, i) => 
+                                                i === index ? 
+                                                {...obj, "enabled" : !item.enabled} 
+                                                : obj 
+                                        ))
+                                        }
+                                    }
+                                value={item.enabled}
+                            />
+                            <Text style={styles.switchLabel}>
+                            { item.name.replace(/(^\w|\s\w)/g, m => m.toUpperCase()) }
+                            </Text>
+                        </View>
+                        
+                    ))}
+
+                    <TouchableOpacity
+                        onPress={ () => updateUserSettingsInDatabase(auth.currentUser.uid, parseUserSettings(checkListState)) }
+                        style={styles.updateButton}
+                    >
+                        <Text style={styles.buttonText}>
+                            Update Settings
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+
+                <View style={styles.buttonContainer}>
+
+                    <TouchableOpacity
+                    onPress={ handleLogout }
+                    style={styles.signOutButton}
+                    >
+                        <Text style={styles.buttonText}>
+                            Sign Out
+                        </Text>
+                    </TouchableOpacity>
+                </View>
             </View>
-
-            <View style={styles.buttonContainer}>
-
-                <TouchableOpacity
-                onPress={ () => updateUserSettingsInDatabase(auth.currentUser.uid, parseUserSettings(checkListState)) }
-                style={styles.button}
-                >
-                    <Text style={styles.buttonText}>
-                        Update Settings
-                    </Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                onPress={ handleLogout }
-                style={styles.button}
-                >
-                    <Text style={styles.buttonText}>
-                        Sign Out
-                    </Text>
-                </TouchableOpacity>
-            </View>
-        </View>
+        </ScrollView>
     )
 }
 
@@ -153,14 +172,25 @@ export default UserScreen
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        paddingBottom: 400,
+    },
+    scroll: {
+    },
+    buttonContainer: {
+        backgroundColor: "yellow",
         justifyContent: "center",
         alignItems: "center",
     },
-    buttonContainer: {
-        width: "60%",
+    checkboxContainer: {
+        width: "100%",
+        flexDirection: "column",
         justifyContent: "center",
-        alignItems: "center",
-        marginTop: 40,
+        alignContent: "center",
+    },
+    historyContainer: {
+        backgroundColor: "yellow",
+        height: "40%",
+        marginTop: 50,
     },
     button: {
         backgroundColor: "#0782f9",
@@ -168,6 +198,24 @@ const styles = StyleSheet.create({
         padding: 15,
         borderRadius: 10,
         alignItems: "center",
+        alignSelf: 'flex-end'
+    },
+    signOutButton: {
+        backgroundColor: "#ff7f84",
+        width: "60%",
+        marginTop: 5,
+        padding: 15,
+        borderRadius: 10,
+        alignItems: "center",
+        alignSelf: "center",
+    },
+    updateButton: {
+        backgroundColor: "#8fc865",
+        width: "60%",
+        padding: 15,
+        borderRadius: 10,
+        alignItems: "center",
+        alignSelf: "center",
     },
     buttonOutline: {
         backgroundColor: "white",
@@ -186,10 +234,18 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     checkbox: {
-        margin: 8,
-        width: "100%",
-        padding: 5,
-        borderRadius: 10,
+        flexDirection: "row",
         alignItems: "center",
-      },
+        justifyContent: "flex-start",
+        padding: 10,
+        
+    },
+    switch: {
+        transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
+    },
+    switchLabel: {
+        marginLeft: 20,
+        fontSize: 16,
+        fontWeight: "bold",
+    },
 })

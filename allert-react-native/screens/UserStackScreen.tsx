@@ -27,7 +27,7 @@ const UserStackScreen = () => {
 
     return (
             <Stack.Navigator>
-                {userData === null ? (
+                {auth.currentUser === null ? (
                 // No user found, user isn't signed in
                 <Stack.Screen
                     name="Login"
