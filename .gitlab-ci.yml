@@ -5,25 +5,26 @@ cache:
   paths:
     - node_modules
 
-stages: # List of stages for jobs, and their order of execution       
+stages: # List of stages for jobs, and their order of execution    
+  - init   
   - lint
   - jest-test
   - build
 
-.installation:
+installation:
   stage: init
   script:
     - cd ./allert-react-native && npm ci --legacy-peer-deps --cache node_modules --prefer-offline
 
 
-.eslint:
+eslint:
  # tell eslint what stage it is
   stage: lint
   script:
     # Run eslint
     - node_modules/eslint/bin/eslint.js .
 
-eas-build:
+.eas-build:
   stage: build
   only:
     - master
@@ -34,7 +35,7 @@ eas-build:
     - npx expo login -u $EXPO_USERNAME -p $EXPO_PASSWORD
     - npx expo publish --non-interactive
 
-.jest-tests:
+jest-tests:
   stage: jest-test
   script:
     - cd ./allert-react-native && npx jest --ci 
