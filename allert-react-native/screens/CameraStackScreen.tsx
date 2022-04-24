@@ -4,13 +4,12 @@ import { useEffect, useState } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { auth, onAuthStateChanged } from '../firebase';
 
-import LoginScreen from './LoginScreen';
-import UserScreen from './UserScreen';
+import CameraScreen from './CameraScreen';
 import ImageModalScreen from './ImageModalScreen';
 
 const Stack = createNativeStackNavigator();
 
-const UserStackScreen = () => {
+const CameraStackScreen = () => {
     const [userData, setUserData]: any = useState(null);
 
     useEffect( () => {
@@ -29,28 +28,18 @@ const UserStackScreen = () => {
     return (
             <Stack.Navigator>
                 <Stack.Group>
-                    {auth.currentUser === null ? (
-                    // No user found, user isn't signed in
                     <Stack.Screen
-                        name="Login"
-                        component={LoginScreen}
+                        name="Camera"
+                        component={CameraScreen}
                         options={{
-                        title: 'Login',
+                        title: 'Camera',
                         headerShown: false,
                         }}
                     />
-                    ) : (
-                    // User is signed in
-                        <Stack.Screen
-                            name="User"
-                            component={UserScreen}
-                            options={{headerShown: false}}
-                        />
-                    )}
                 </Stack.Group>
                 <Stack.Group screenOptions={{ presentation: 'modal' }}>
                     <Stack.Screen
-                        name="History"
+                        name="Image Results"
                         component={ImageModalScreen}
                     />
                 </Stack.Group>
@@ -58,6 +47,4 @@ const UserStackScreen = () => {
     )
 }
 
-export default UserStackScreen
-
-const styles = StyleSheet.create({})
+export default CameraStackScreen

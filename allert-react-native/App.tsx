@@ -12,6 +12,7 @@ import { Ionicons, AntDesign } from '@expo/vector-icons';
 import UserStackScreen from './screens/UserStackScreen';
 import CameraScreen from './screens/CameraScreen';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import CameraStackScreen from './screens/CameraStackScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -26,24 +27,24 @@ export default function App() {
   else return (
     <NavigationContainer>
       <Tab.Navigator>
-        <Tab.Screen
-          name="Camera"
-          component={CameraScreen}
-          options={{
-            headerShown: false,
-            title: "Camera",
-            tabBarIcon: ( { color, size }) => (<Ionicons name="camera" color={color} size={size} /> ),
-          }}
-        />
-        <Tab.Screen
-          name="UserStack"
-          component={UserStackScreen}
-          options={{
-            headerShown: false,
-            title: "User Settings",
-            tabBarIcon: ( { color, size }) => (<AntDesign name="user" color={color} size={size} /> ),
-          }}
-        />
+          <Tab.Screen
+            name="CameraStack"
+            component={CameraStackScreen}
+            options={{
+              headerShown: false,
+              title: "Camera",
+              tabBarIcon: ( { color, size }) => (<Ionicons name="camera" color={color} size={size} /> ),
+            }}
+          />
+          <Tab.Screen
+            name="UserStack"
+            component={UserStackScreen}
+            options={{
+              headerShown: false,
+              title: "User Settings",
+              tabBarIcon: ( { color, size }) => (<AntDesign name="user" color={color} size={size} /> ),
+            }}
+          />
       </Tab.Navigator>
     </NavigationContainer>
   );

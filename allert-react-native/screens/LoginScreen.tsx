@@ -33,19 +33,19 @@ const LoginScreen = () => {
         const reference = ref(db, 'users/' + userId);
         set(reference, { userFlags:
             {
-                "celery" : "false",
-                "crustaceans" : "false",
-                "eggs" : "false",
-                "fish" : "false",
-                "gluten" : "false",
-                "lupin" : "false",
-                "milk" : "false",
-                "molluscs" : "false",
-                "mustard" : "false",
-                "nuts" : "false",
-                "sesame seeds" : "false",
-                "soybeans" : "false",
-                "sulphites" : "false",
+                "celery" : true,
+                "crustaceans" : true,
+                "eggs" : true,
+                "fish" : true,
+                "gluten" : true,
+                "lupin" : true,
+                "milk" : true,
+                "molluscs" : true,
+                "mustard" : true,
+                "nuts" : true,
+                "sesame seeds" : true,
+                "soybeans" : true,
+                "sulphites" : true,
             }
         });
     }

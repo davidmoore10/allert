@@ -3,11 +3,11 @@ import { StyleSheet, Text, View, TouchableOpacity, Image, Alert} from 'react-nat
 import { LinearGradient } from 'expo-linear-gradient';
 import { useFocusEffect } from '@react-navigation/native';
 import { auth, onAuthStateChanged } from '../firebase';
-import { getDatabase, ref, onValue } from 'firebase/database';
+import { getDatabase, ref, onValue, serverTimestamp, push } from 'firebase/database';
 import * as ImagePicker from 'expo-image-picker';
 
 
-const CameraScreen = () => {
+const CameraScreen = ({navigation}) => {
 	//image data
 	const defaultFlags = ["celery","crustaceans","eggs","fish","gluten","lupin","milk","molluscs","mustard","nuts","sesame seeds","soybeans","sulphites"];
 	const [image, setImage] = useState(null);
@@ -23,12 +23,6 @@ const CameraScreen = () => {
 				}
 				else {
 					setUserData(null);
-					// Alert.alert('No User Logged In!', 'All allergens are flagged in images by default. You must be logged in to change these settings from the user page.', [
-					// 	{
-					// 	  text: 'Close',
-					// 	  style: 'cancel',
-					// 	},
-					//   ]);
 					setUserFlags(defaultFlags);
 				}
 			})
@@ -75,8 +69,16 @@ const CameraScreen = () => {
 				}),
 			}).then((response) => response.json())
 			.then((responseJson) => {
-			console.log(responseJson);
-			})
+				const result = JSON.parse(responseJson)
+				updateUserHistoryInDatabase(auth.currentUser.uid, result)
+				navigation.navigate("Image Results",
+				{
+					props:
+						{
+							"base64": "data:image/jpeg;base64," + image.base64,
+							"results": result
+						}
+				})})
 		} catch (error) {
 		  console.error(error);
 		}
@@ -100,6 +102,18 @@ const CameraScreen = () => {
 			});
     }
 
+	const updateUserHistoryInDatabase = (userId: string, results: any)  => {
+        const db = getDatabase();
+        const reference = ref(db, 'users/' + userId + "/userHistory");
+        push(reference,
+			{
+				"timestamp": serverTimestamp(),
+				"results": results,
+				"base64": "data:image/jpeg;base64," + image.base64,
+			}
+		);
+    }
+
 	return (
 		<View style={styles.container}>
 
@@ -119,7 +133,6 @@ const CameraScreen = () => {
 								</LinearGradient>
 							</TouchableOpacity>
 						) : (
-							
 						<Text style={styles.imagePreviewText}>No Image</Text>
 						)
 						}
