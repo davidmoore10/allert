@@ -74,7 +74,6 @@ const UserScreen = ({navigation}) => {
         signOut(auth).then(
             () => {
                 auth.updateCurrentUser(null)
-                console.log("Logged Out")
             })
             .catch(error => alert(error.message))
     }
@@ -162,7 +161,7 @@ const UserScreen = ({navigation}) => {
                         >
                         <Entypo name="image" size={24} />
                         <Text style={ item.results ? styles.redText : styles.blackText }>
-                            { item.results ? "No Flags" : "Allergens Flagged" }
+                            { item.results ? "Allergens Flagged": "No Flags" }
                         </Text>
                         <Text style={ styles.blackText }>
                             {convertTimestamp(item.timestamp) }
@@ -287,7 +286,7 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
     },
     signOutButton: {
-        width: "80%",
+        width: "90%",
         marginTop: 5,
         padding: 15,
         borderRadius: 10,
@@ -296,7 +295,7 @@ const styles = StyleSheet.create({
     },
     updateButton: {
         backgroundColor: "#8fc865",
-        width: "80%",
+        width: "90%",
         padding: 15,
         borderRadius: 10,
         alignItems: "center",

@@ -13,7 +13,6 @@ const LoginScreen = () => {
             userCredentials => {
                 const user = userCredentials.user
                 initializeUserInDatabase(user.uid);
-                console.log("Registered with:", user.email)
             })
             .catch(error => alert(error.message))
     }
@@ -22,7 +21,6 @@ const LoginScreen = () => {
         signInWithEmailAndPassword(auth, email, password).then(
             userCredentials => {
                 const user = userCredentials.user
-                console.log("Logged in with:", user.email)
             })
             .catch(error => alert(error.message))
     }
@@ -58,13 +56,13 @@ const LoginScreen = () => {
             <TextInput
                 placeholder='Email'
                 value={email}
-                onChangeText={text => setEmail(text)}
+                onChangeText={text => setEmail(text.trim())}
                 style={styles.input}
             />
             <TextInput
                 placeholder='Password'
                 value={password}
-                onChangeText={text => setPassword(text)}
+                onChangeText={text => setPassword(text.trim())}
                 style={styles.input}
                 secureTextEntry
             />
@@ -112,7 +110,7 @@ const styles = StyleSheet.create({
         marginTop: 5,
     },
     buttonContainer: {
-        width: "80%",
+        width: "90%",
         justifyContent: "center",
         alignItems: "center",
         marginTop: 40,

@@ -13,7 +13,7 @@ export default function ImageModalScreen({ navigation, route }) {
 				{ results ? (
 					<View style={styles.textContainer}>
 					<Text style={styles.title}>
-						{ "Allergens Flagged" }
+						{ "Flagged Allergens Detected" }
 					</Text>
 					<Text style={styles.allergenText}>
 						{ results.join(", ").replace(/(^\w|\s\w)/g, (m: string) => m.toUpperCase()) }
@@ -48,17 +48,20 @@ const styles = StyleSheet.create({
 		color: "black",
 		width: "100%",
 		textAlign: "center",
-		fontSize: 14,
+		fontSize: 24,
 		fontWeight: 'bold',
 		backgroundColor: "transparent",
 		borderBottomWidth: 0.5,
+		padding: 5,
 		borderColor: "#c5c5c5",
 	},
 	allergenText: {
 		color: "black",
+		height:"100%",
+		width:"100%",
 		fontSize: 24,
+		padding: 60,
 		fontWeight: 'bold',
-		backgroundColor: "transparent",
 		textAlign: "center",
 	},
 	modalImage: {

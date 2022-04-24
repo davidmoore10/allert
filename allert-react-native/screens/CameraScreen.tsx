@@ -143,7 +143,7 @@ const CameraScreen = ({navigation}) => {
 								colors={[ 'rgba(255,255,255,0)', 'rgba(0,0,0,1)']}
 								style={styles.textGradient}
 								>
-									<Text style={styles.imageButtonText}>Press to Confirm Image</Text>
+									<Text style={styles.imageButtonText}>Touch to Scan Image</Text>
 								</LinearGradient>
 							</TouchableOpacity>
 						) : (
@@ -172,7 +172,7 @@ const CameraScreen = ({navigation}) => {
 
 				<View style={styles.buttonContainer}>	
 					<TouchableOpacity
-					onPress={ () => {} }
+					onPress={ () => navigation.navigate("Help") }
 					style={[styles.button, styles.buttonOutline]}
 					>
 						<Text style={styles.buttonOutlineText}>Help</Text>
