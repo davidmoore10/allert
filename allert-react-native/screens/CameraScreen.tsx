@@ -88,7 +88,9 @@ const CameraScreen = () => {
 			const reference = ref(db, "users/" + userId + "/userFlags");
 	
 			onValue(reference, (snapshot) => {
-				const data = JSON.parse(snapshot.val());
+				
+				const string = JSON.stringify(snapshot)
+				const data = JSON.parse(string)
 				let result = Object.keys(data)
 						.filter( key => data[key] != false )
 						   .map(key => (

@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity, View, Switch, ScrollView, StatusBar } from 'react-native'
 import { auth, signOut } from '../firebase';
-import { getDatabase, ref, set, onValue } from 'firebase/database';
+import { getDatabase, ref, set, onValue, update } from 'firebase/database';
 import React, { useState, useEffect }from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { AntDesign } from '@expo/vector-icons';
@@ -78,7 +78,7 @@ const UserScreen = () => {
     const parseUserSettings = (list) => {
         let reducedList = list.reduce(
             (obj, item) => Object.assign(obj, { [item.name]: item.enabled }), {});
-        return(JSON.stringify(reducedList))
+        return(reducedList)
     }
 
     const retrieveUserSettingsFromDatabase = () => {
@@ -87,7 +87,9 @@ const UserScreen = () => {
         const reference = ref(db, "users/" + userId + "/userFlags");
 
         onValue(reference, (snapshot) => {
-            const data = JSON.parse(snapshot.val());
+            console.log(snapshot)
+            const string = JSON.stringify(snapshot)
+            const data = JSON.parse(string);
             let result = Object.keys(data)
                    .map(key => (
                         {
@@ -99,10 +101,10 @@ const UserScreen = () => {
         });
     }
 
-    const updateUserSettingsInDatabase = (userId: string, settings: string)  => {
+    const updateUserSettingsInDatabase = (userId: string, settings: any)  => {
         const db = getDatabase();
         const reference = ref(db, 'users/' + userId);
-        set(reference, { userFlags: settings});
+        update(reference, { userFlags: settings});
     }
 
     return (

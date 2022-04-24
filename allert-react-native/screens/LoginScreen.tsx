@@ -2,7 +2,7 @@ import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, Vi
 import { useEffect, useState } from 'react';
 import React from 'react';
 import { auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from '../firebase';
-import { getDatabase, ref, push } from 'firebase/database';
+import { getDatabase, ref, set } from 'firebase/database';
 
 const LoginScreen = () => {
     const [email, setEmail] = useState("");
@@ -31,7 +31,7 @@ const LoginScreen = () => {
     const initializeUserInDatabase = (userId: string)  => {
         const db = getDatabase();
         const reference = ref(db, 'users/' + userId);
-        push(reference, { userFlags:
+        set(reference, { userFlags:
             {
                 "celery" : "false",
                 "crustaceans" : "false",
