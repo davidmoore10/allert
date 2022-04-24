@@ -15,11 +15,6 @@
 
 image: node:alpine
 
-cache:
-  key: $CI_COMMIT_REF_SLUG
-  paths:
-    - node_modules
-
 stages: # List of stages for jobs, and their order of execution
   - init          
   - lint
@@ -30,6 +25,7 @@ init:
   stage: init
   script:
     - cd ./allert-react-native && yarn install --frozen-lockfile --modules-folder ../node_modules
+    - npm ci --prefix ../node_modules
 
 eslint:
  # tell eslint what stage it is
