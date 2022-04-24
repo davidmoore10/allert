@@ -45,4 +45,3 @@ jest-tests:
   stage: jest-test
   script:
     - npx jest --ci 
-    - echo "Running unit tests...." 
