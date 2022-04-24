@@ -26,7 +26,6 @@ const LoginScreen = () => {
             })
             .catch(error => alert(error.message))
     }
-
     
     const initializeUserInDatabase = (userId: string)  => {
         const db = getDatabase();

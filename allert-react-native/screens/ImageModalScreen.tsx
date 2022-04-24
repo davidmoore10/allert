@@ -1,7 +1,4 @@
-import { StatusBar } from 'expo-status-bar';
-import { Image, Platform, StyleSheet, TouchableOpacity } from 'react-native';
-
-import EditScreenInfo from '../components/EditScreenInfo';
+import { Image, StyleSheet} from 'react-native';
 import { Text, View } from '../components/Themed';
 
 export default function ImageModalScreen({ navigation, route }) {
@@ -19,7 +16,7 @@ export default function ImageModalScreen({ navigation, route }) {
             { "Allergens Flagged" }
           </Text>
           <Text style={styles.allergenText}>
-            { results.join(", ").replace(/(^\w|\s\w)/g, m => m.toUpperCase()) }
+            { results.join(", ").replace(/(^\w|\s\w)/g, (m: string) => m.toUpperCase()) }
           </Text>
         </View>
         ) : (

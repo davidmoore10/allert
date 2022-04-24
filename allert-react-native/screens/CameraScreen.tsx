@@ -105,6 +105,7 @@ const CameraScreen = ({navigation}) => {
 	const updateUserHistoryInDatabase = (userId: string, results: any)  => {
         const db = getDatabase();
         const reference = ref(db, 'users/' + userId + "/userHistory");
+		
         push(reference,
 			{
 				"timestamp": serverTimestamp(),

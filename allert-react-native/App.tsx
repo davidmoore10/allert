@@ -16,10 +16,8 @@ import CameraStackScreen from './screens/CameraStackScreen';
 
 const Tab = createBottomTabNavigator();
 
-
 export default function App() {
   const isLoadingComplete = useCachedResources();
-  const colorScheme = useColorScheme();
 
   if (!isLoadingComplete) {
     return null;

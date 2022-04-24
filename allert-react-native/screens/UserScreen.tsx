@@ -160,7 +160,7 @@ const UserScreen = ({navigation}) => {
                             onPress={ () => navigation.navigate("History", { props: item } ) }
                             style={[styles.historyButton]}
                         >
-                        <Entypo style={styles.imageIcon} name="image" size={24} />
+                        <Entypo name="image" size={24} />
                         <Text style={ item.results ? styles.redText : styles.blackText }>
                             { item.results ? "No Flags" : "Allergens Flagged" }
                         </Text>
