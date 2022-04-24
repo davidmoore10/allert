@@ -45,12 +45,6 @@ build-job:       # This job runs in the build stage, which runs first.
     - echo "Compiling..."
     - echo "Compile complete."   
 
-lint-test-job:   # This job also runs in the test stage.
-  stage: test    # It can run at the same time as unit-test-job (in parallel).
-  script:
-    - echo "Linting..."
-    - echo "No lint issues found."
-
 before_script:
   - npm ci
 
