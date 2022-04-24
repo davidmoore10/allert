@@ -5,6 +5,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { auth, onAuthStateChanged } from '../firebase';
 import { getDatabase, ref, onValue, serverTimestamp, push } from 'firebase/database';
 import * as ImagePicker from 'expo-image-picker';
+import LoadingScreen from './LoadingScreen';
 
 
 const CameraScreen = ({navigation}) => {
@@ -13,6 +14,7 @@ const CameraScreen = ({navigation}) => {
 	const [image, setImage] = useState(null);
 	const [userFlags, setUserFlags] = useState(defaultFlags);
 	const [userData, setUserData]: any = useState(null);
+	const [isLoading, setIsLoading] = useState(false)
 
     useFocusEffect(
 		React.useCallback(() => {
@@ -55,8 +57,8 @@ const CameraScreen = ({navigation}) => {
 	};
 
 	const getResultsFromApi = async () => {
-		console.log("attempting to send image... searching for :", userFlags)
 		try {
+			setIsLoading(true);
 			fetch("https://bid4tm2l7g.execute-api.eu-west-1.amazonaws.com/default", {
 				method: 'POST',
 				headers: {
@@ -69,6 +71,7 @@ const CameraScreen = ({navigation}) => {
 				}),
 			}).then((response) => response.json())
 			.then((responseJson) => {
+				setIsLoading(false);
 				const result = JSON.parse(responseJson)
 				if (auth.currentUser)
 				{
@@ -83,7 +86,8 @@ const CameraScreen = ({navigation}) => {
 						}
 				})})
 		} catch (error) {
-		  console.error(error);
+			setIsLoading(false);
+		  	console.error(error);
 		}
 	};
 
@@ -117,6 +121,12 @@ const CameraScreen = ({navigation}) => {
 			}
 		);
     }
+
+	if (isLoading) {
+		return (
+			<LoadingScreen />
+		)
+	}
 
 	return (
 		<View style={styles.container}>

@@ -17,12 +17,12 @@ import CameraStackScreen from './screens/CameraStackScreen';
 const Tab = createBottomTabNavigator();
 
 export default function App() {
-  // const isLoadingComplete = useCachedResources();
+  const isLoadingComplete = useCachedResources();
 
-  // if (!isLoadingComplete) {
-  //   return null;
-  // }
-  // else
+  if (!isLoadingComplete) {
+    return null;
+  }
+  else
   return (
     <NavigationContainer>
       <Tab.Navigator>
