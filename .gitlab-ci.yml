@@ -16,7 +16,7 @@
 image: node:alpine
 
 cache:
-  key: ${CI_COMMIT_REF_SLUG}
+  key: $CI_COMMIT_REF_SLUG
   paths:
     - node_modules
 
@@ -31,10 +31,6 @@ init:
   script:
     - cd ./allert-react-native && yarn install --frozen-lockfile --modules-folder ../node_modules
     - npm i
-    - npm i eslint eslint-plugin-react@latest eslint-plugin-react-native @typescript-eslint/eslint-plugin@latest @typescript-eslint/parser@latest
-  only:
-    changes:
-      - ./allert-react-native/yarn-lock.json
 
 eslint:
  # tell eslint what stage it is
