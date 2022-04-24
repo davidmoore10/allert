@@ -25,7 +25,7 @@ init:
   stage: init
   script:
     - cd ./allert-react-native && yarn install --frozen-lockfile --modules-folder ../node_modules
-    - npm ci --prefix ../node_modules
+    - cd ./allert-react-native && npm ci --prefix ../node_modules
 
 eslint:
  # tell eslint what stage it is
