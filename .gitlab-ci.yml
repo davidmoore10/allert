@@ -44,5 +44,5 @@ stages: # List of stages for jobs, and their order of execution
 jest-tests:
   stage: jest-test
   script:
-    - cd ./allert-react-native && npx jest --ci 
+    - npx jest --ci 
     - echo "Running unit tests...." 
