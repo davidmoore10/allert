@@ -22,13 +22,17 @@ cache:
     - .jest
     - node_modules
 
-before_script:
-  - cd ./allert-react-native && npm ci --legacy-peer-deps --cache .npm --prefer-offline
-
-stages: # List of stages for jobs, and their order of execution         
+stages: # List of stages for jobs, and their order of execution  
+  - init      
   - lint
-  - build
   - jest-test
+  - build
+
+installation:
+  stage: init
+  script:
+    - cd ./allert-react-native && npm ci --legacy-peer-deps --cache .npm --prefer-offline
+
 
 eslint:
  # tell eslint what stage it is
@@ -42,9 +46,11 @@ eas-build:
   only:
     - master
   script:
+    script:
     - apk add --no-cache bash
+    - npm i expo-cli
     - npx expo login --non-interactive -u $EXPO_USERNAME
-    - EAS_NO_VCS=1 npx eas-cli build -p android --non-interactive --profile preview
+    - npx expo publish --non-interactive
 
 jest-tests:
   stage: jest-test
