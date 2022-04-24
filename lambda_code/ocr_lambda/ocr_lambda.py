@@ -10,17 +10,16 @@ import numpy as np
 client = boto3.client('stepfunctions')
 
 def deskew_fn(img):
-  angle = determine_skew(img)
-  image_center = tuple(np.array(img.shape[1::-1]) / 2)
-  rot_mat = cv2.getRotationMatrix2D(image_center, angle, 1.0)
-  result = cv2.warpAffine(img, rot_mat, img.shape[1::-1], flags=cv2.INTER_LINEAR)
+  skew_angle = determine_skew(img)
+  image_centre = tuple(np.array(img.shape[1::-1]) / 2)
+  rot_matrix = cv2.getRotationMatrix2D(image_centre, skew_angle, 1.0)
+  result = cv2.warpAffine(img, rot_matrix, img.shape[1::-1], flags=cv2.INTER_LINEAR)
   return result
 
 def ocr(img):
 
   # Applying threshold to image
-  thresh = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]
-  result = 255 - thresh
+  result = cv2.threshold(img, 0, 255, cv2.THRESH_OTSU)[1]
 
   # Deskewing image
   result = deskew_fn(result)
