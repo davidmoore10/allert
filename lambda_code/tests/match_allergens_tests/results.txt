@@ -1,0 +1,30 @@
+Match at end of alls list
+Set Compare: 500000 loops, best of 5: 984 nsec per loop
+Set Disjoint: 500000 loops, best of 5: 829 nsec per loop
+If Any: 100000 loops, best of 5: 2.66 usec per loop
+If Any List Comprehension: 100000 loops, best of 5: 2.26 usec per loop
+
+Match at start of alls list
+Set Compare: 200000 loops, best of 5: 1.01 usec per loop
+Set Disjoint: 500000 loops, best of 5: 860 nsec per loop
+If Any: 500000 loops, best of 5: 576 nsec per loop
+If Any List Comprehension: 500000 loops, best of 5: 570 nsec per loop
+
+Match at end of text list
+Set Compare: 500000 loops, best of 5: 928 nsec per loop
+Set Disjoint: 500000 loops, best of 5: 901 nsec per loop
+If Any: 200000 loops, best of 5: 1.24 usec per loop
+If Any List Comprehension: 200000 loops, best of 5: 1.25 usec per loop
+
+Match at start of text list
+Set Compare: 500000 loops, best of 5: 940 nsec per loop
+Set Disjoint: 500000 loops, best of 5: 848 nsec per loop
+If Any: 200000 loops, best of 5: 1.23 usec per loop
+If Any List Comprehension: 200000 loops, best of 5: 1.19 usec per loop
+
+No matches
+Set Compare: 500000 loops, best of 5: 939 nsec per loop
+Set Disjoint: 500000 loops, best of 5: 930 nsec per loop
+If Any: 100000 loops, best of 5: 2.44 usec per loop
+If Any List Comprehension: 100000 loops, best of 5: 2.41 usec per loop
+

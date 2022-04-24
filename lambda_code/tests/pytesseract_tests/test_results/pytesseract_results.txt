@@ -1,0 +1,8 @@
+Preprocessing Method Results
+{
+    'Basic Adaptive Threshold': 3.7797554499098482, 
+    'Basic Otsu Threshold': 5.12396858619108, 
+    'Bilateral filter': 4.529801477578614, 
+    'Median blur': 5.250154025857324, 
+    'Bilateral Filter & Median Blur': 5.3542667498557694
+}
