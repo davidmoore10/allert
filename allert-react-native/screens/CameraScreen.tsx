@@ -70,7 +70,10 @@ const CameraScreen = ({navigation}) => {
 			}).then((response) => response.json())
 			.then((responseJson) => {
 				const result = JSON.parse(responseJson)
-				updateUserHistoryInDatabase(auth.currentUser.uid, result)
+				if (auth.currentUser)
+				{
+					updateUserHistoryInDatabase(auth.currentUser.uid, result)
+				}
 				navigation.navigate("Image Results",
 				{
 					props:
