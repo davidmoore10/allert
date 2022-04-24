@@ -18,8 +18,6 @@ image: node:alpine
 cache:
   key: $CI_COMMIT_REF_SLUG
   paths:
-    - ~/.npm
-    - .jest
     - node_modules
 
 stages: # List of stages for jobs, and their order of execution  
@@ -31,10 +29,10 @@ stages: # List of stages for jobs, and their order of execution
 installation:
   stage: init
   script:
-    - cd ./allert-react-native && npm ci --legacy-peer-deps --cache .npm --prefer-offline
+    - cd ./allert-react-native && npm ci --legacy-peer-deps --cache node_modules --prefer-offline
 
 
-eslint:
+.eslint:
  # tell eslint what stage it is
   stage: lint
   script:
@@ -51,7 +49,7 @@ eas-build:
     - npx expo login --non-interactive -u $EXPO_USERNAME
     - npx expo publish --non-interactive
 
-jest-tests:
+.jest-tests:
   stage: jest-test
   script:
-    - npx jest --ci 
+    - cd ./allert-react-native && npx jest --ci 
