@@ -6,6 +6,7 @@ import { auth, onAuthStateChanged } from '../firebase';
 
 import CameraScreen from './CameraScreen';
 import ImageModalScreen from './ImageModalScreen';
+import HelpModalScreen from './HelpModalScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -41,6 +42,10 @@ const CameraStackScreen = () => {
                     <Stack.Screen
                         name="Image Results"
                         component={ImageModalScreen}
+                    />
+                    <Stack.Screen
+                        name="Help"
+                        component={HelpModalScreen}
                     />
                 </Stack.Group>
             </Stack.Navigator>   

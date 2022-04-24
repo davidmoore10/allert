@@ -1,4 +1,4 @@
-import { Animated, Easing, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Animated, Easing, StyleSheet, Text, View } from 'react-native'
 import React, { useState } from 'react';
 import { Feather } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
@@ -29,9 +29,7 @@ const LoadingScreen = () => {
 
   return (
     <View style={styles.container}>
-        <Animated.View style={{transform: [{ rotate: RotateData }]}}>
-      		<Feather name="loader" size={72} color="black" />
-        </Animated.View>
+        <ActivityIndicator size="large" color="#0782f9"/>
     </View>
   )
 }

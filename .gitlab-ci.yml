@@ -1,34 +1,20 @@
-# This file is a template, and might need editing before it works on your project.
-# To contribute improvements to CI/CD templates, please follow the Development guide at:
-# https://docs.gitlab.com/ee/development/cicd/templates.html
-# This specific template is located at:
-# https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
-
-# This is a sample GitLab CI/CD configuration file that should run without any modifications.
-# It demonstrates a basic 3 stage CI/CD pipeline. Instead of real tests or scripts,
-# it uses echo commands to simulate the pipeline execution.
-#
-# A pipeline is composed of independent jobs that run scripts, grouped into stages.
-# Stages run in sequential order, but jobs within stages run in parallel.
-#
-# For more information, see: https://docs.gitlab.com/ee/ci/yaml/index.html#stages
-
 image: node:alpine
 
 cache:
   key: $CI_COMMIT_REF_SLUG
   paths:
-    - ~/.npm
-    - .jest
     - node_modules
 
-before_script:
-  - cd ./allert-react-native && npm ci --legacy-peer-deps --cache .npm --prefer-offline
-
-stages: # List of stages for jobs, and their order of execution         
+stages: # List of stages for jobs, and their order of execution       
   - lint
-  - build
   - jest-test
+  - build
+
+.installation:
+  stage: init
+  script:
+    - cd ./allert-react-native && npm ci --legacy-peer-deps --cache node_modules --prefer-offline
+
 
 .eslint:
  # tell eslint what stage it is
@@ -37,13 +23,18 @@ stages: # List of stages for jobs, and their order of execution
     # Run eslint
     - node_modules/eslint/bin/eslint.js .
 
-.build-job:       # This job runs in the build stage, which runs first.
+eas-build:
   stage: build
+  only:
+    - master
   script:
-    - echo "Compiling..."
-    - echo "Compile complete."   
+    - apk add --no-cache bash
+    - npm i expo-cli
+    - cd ./allert-react-native && npm ci --legacy-peer-deps --prefer-offline
+    - npx expo login -u $EXPO_USERNAME -p $EXPO_PASSWORD
+    - npx expo publish --non-interactive
 
-jest-tests:
+.jest-tests:
   stage: jest-test
   script:
-    - npx jest --ci 
+    - cd ./allert-react-native && npx jest --ci 
