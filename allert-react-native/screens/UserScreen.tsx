@@ -180,11 +180,7 @@ const UserScreen = ({navigation}) => {
                         </Text>
                     </TouchableOpacity>
                 )
-            }
-
-                
-
-                    
+            } 
                 </View>
 
                 <View style={styles.sectionHeader}>
