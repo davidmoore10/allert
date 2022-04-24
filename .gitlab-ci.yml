@@ -47,7 +47,7 @@ eas-build:
     - apk add --no-cache bash
     - npm i expo-cli
     - cd ./allert-react-native && npm ci --legacy-peer-deps --prefer-offline
-    - cd ./allert-react-native && EAS_NO_VCS=1 npx eas-cli build --platform all --non-interactive
+    - EAS_NO_VCS=1 npx eas-cli build --platform all --non-interactive
 
 .jest-tests:
   stage: jest-test
