@@ -16,6 +16,9 @@
   },
   "jest": {
     "preset": "jest-expo",
+    "setupFiles": [
+      "<rootDir>/jestSetup.js"
+    ],
     "verbose": true,
     "moduleFileExtensions": ["js", "jsx", "ts", "tsx", "json", "node"],
     "collectCoverage": true,
