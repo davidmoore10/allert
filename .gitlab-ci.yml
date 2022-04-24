@@ -20,7 +20,6 @@ cache:
   paths:
     - ~/.npm
     - node_modules
-    - /allert-react-native
 
 stages: # List of stages for jobs, and their order of execution
   - init          
@@ -31,6 +30,9 @@ stages: # List of stages for jobs, and their order of execution
 init:
   stage: init
   script:
+    - name: Install dependencies from yarn lockfile
+      run: yarn install --frozen-lockfile
+      working-directory: ./allert-react-native
     - npm i eslint eslint-plugin-react@latest eslint-plugin-react-native @typescript-eslint/eslint-plugin@latest @typescript-eslint/parser@latest
 
 eslint:
@@ -45,9 +47,6 @@ build-job:       # This job runs in the build stage, which runs first.
   script:
     - echo "Compiling..."
     - echo "Compile complete."   
-
-before_script:
-  - yarn install --frozen-lockfile
 
 jest-tests:
   stage: jest-test
