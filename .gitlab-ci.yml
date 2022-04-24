@@ -49,5 +49,5 @@ build-job:       # This job runs in the build stage, which runs first.
 jest-tests:
   stage: jest-test
   script:
-    - npx jest --ci 
+    - cd ./allert-react-native && npx jest --ci 
     - echo "Running unit tests...." 
