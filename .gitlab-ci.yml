@@ -15,23 +15,25 @@
 
 image: node:alpine
 
-stages: # List of stages for jobs, and their order of execution
-  - init          
+cache:
+  key: $CI_COMMIT_REF_SLUG
+  paths:
+    - /allert-react-native/node_modules
+
+before_script:
+  - cd ./allert-react-native && npm ci --legacy-peer-deps --cache node_modules --prefer-offline
+
+stages: # List of stages for jobs, and their order of execution         
   - lint
   - build
   - jest-test
-
-init:
-  stage: init
-  script:
-    - cd ./allert-react-native && npm ci --legacy-peer-deps
 
 eslint:
  # tell eslint what stage it is
   stage: lint
   script:
     # Run eslint
-    - node_modules/eslint/bin/eslint.js .
+    - ./allert-react-native/node_modules/eslint/bin/eslint.js .
 
 build-job:       # This job runs in the build stage, which runs first.
   stage: build
