@@ -18,10 +18,12 @@ image: node:alpine
 cache:
   key: $CI_COMMIT_REF_SLUG
   paths:
+    - ~/.npm
+    - .jest
     - node_modules
 
 before_script:
-  - cd ./allert-react-native && npm ci --legacy-peer-deps --cache node_modules --prefer-offline
+  - cd ./allert-react-native && npm ci --legacy-peer-deps --cache .npm --prefer-offline
 
 stages: # List of stages for jobs, and their order of execution         
   - lint
