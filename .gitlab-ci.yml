@@ -30,18 +30,21 @@ stages: # List of stages for jobs, and their order of execution
   - build
   - jest-test
 
-.eslint:
+eslint:
  # tell eslint what stage it is
   stage: lint
   script:
     # Run eslint
     - node_modules/eslint/bin/eslint.js .
 
-.build-job:       # This job runs in the build stage, which runs first.
+eas-build:
   stage: build
+  only:
+    - master
   script:
-    - echo "Compiling..."
-    - echo "Compile complete."   
+    - apk add --no-cache bash
+    - npx expo login --non-interactive -u <EXPO USERNAME>
+    - EAS_NO_VCS=1 npx eas-cli build -p android --non-interactive --profile preview
 
 jest-tests:
   stage: jest-test
