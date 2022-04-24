@@ -20,6 +20,7 @@ cache:
   paths:
     - ~/.npm
     - node_modules
+    - /allert-react-native
 
 stages: # List of stages for jobs, and their order of execution
   - init          
