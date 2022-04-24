@@ -161,8 +161,8 @@ const UserScreen = ({navigation}) => {
                             style={[styles.historyButton]}
                         >
                         <Entypo style={styles.imageIcon} name="image" size={24} />
-                        <Text style={ item.results.length === 0 ? styles.blackText : styles.redText }>
-                            { item.results.length === 0 ? "No Flags" : "Allergens Flagged" }
+                        <Text style={ item.results ? styles.redText : styles.blackText }>
+                            { item.results ? "No Flags" : "Allergens Flagged" }
                         </Text>
                         <Text style={ styles.blackText }>
                             {convertTimestamp(item.timestamp) }

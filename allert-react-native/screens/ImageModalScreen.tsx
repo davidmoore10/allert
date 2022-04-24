@@ -5,18 +5,32 @@ import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
 
 export default function ImageModalScreen({ navigation, route }) {
-  const image = route.params.props.base64;
-  const results = route.params.props.results
+  let image = route.params.props.base64 === undefined ? null : route.params.props.base64;
+  let results = route.params.props.results === undefined ? null : route.params.props.results;
   return (
     <View style={styles.container}>
       <Image
-      source={{ uri: image }}
-      style={styles.modalImage}
+        source={{ uri: image }}
+        style={styles.modalImage}
       />
-      <Text style={{ fontSize: 30, color: "white" }}>
-        { "This item contains: " + results.join(", ").replace(/(^\w|\s\w)/g, m => m.toUpperCase()) }
-      </Text>
-    </View>
+        { results ? (
+          <View style={styles.textContainer}>
+          <Text style={styles.title}>
+            { "Allergens Flagged" }
+          </Text>
+          <Text style={styles.allergenText}>
+            { results.join(", ").replace(/(^\w|\s\w)/g, m => m.toUpperCase()) }
+          </Text>
+        </View>
+        ) : (
+          <View style={styles.textContainer}>
+            <Text style={styles.allergenText}>
+            No Allergens Flagged.
+            </Text>
+          </View>
+        )
+      }
+      </View>
   );
 }
 
@@ -25,10 +39,30 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: "transparent",
+  },
+  textContainer: {
+    flex: 1,
+    width: "100%",
+    alignItems: "center",
+    backgroundColor: "transparent",
   },
   title: {
-    fontSize: 20,
+    color: "black",
+    width: "100%",
+    textAlign: "center",
+    fontSize: 14,
     fontWeight: 'bold',
+    backgroundColor: "transparent",
+    borderBottomWidth: 0.5,
+    borderColor: "#c5c5c5",
+  },
+  allergenText: {
+    color: "black",
+    fontSize: 24,
+    fontWeight: 'bold',
+    backgroundColor: "transparent",
+    textAlign: "center",
   },
   modalImage: {
     width: 500,
