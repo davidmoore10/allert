@@ -24,7 +24,7 @@ stages: # List of stages for jobs, and their order of execution
 init:
   stage: init
   script:
-    - cd ./allert-react-native && npm ci --prefix ../node_modules
+    - cd ./allert-react-native && npm ci
 
 eslint:
  # tell eslint what stage it is
