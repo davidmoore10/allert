@@ -43,7 +43,7 @@ eas-build:
     - master
   script:
     - apk add --no-cache bash
-    - npx expo login --non-interactive -u <EXPO USERNAME>
+    - npx expo login --non-interactive -u $EXPO_USERNAME
     - EAS_NO_VCS=1 npx eas-cli build -p android --non-interactive --profile preview
 
 jest-tests:
