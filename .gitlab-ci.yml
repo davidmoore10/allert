@@ -1,10 +1,5 @@
 image: node:alpine
 
-cache:
-  key: $CI_COMMIT_REF_SLUG
-  paths:
-    - node_modules
-
 stages:
   - init   
   - lint
@@ -12,18 +7,29 @@ stages:
 
 installation:
   stage: init
+  cache:
+    key: $CI_COMMIT_REF_SLUG
+    paths:
+      - .npm/
   script:
-    - cd ./src/allert-react-native && npm ci --legacy-peer-deps --cache node_modules --prefer-offline
+    - cd ./src/allert-react-native && npm ci --legacy-peer-deps --cache .npm --prefer-offline
+  artifacts:
+    paths:
+      - node_modules/
 
 
 eslint:
   stage: lint
+  needs:
+    - job: installation
+      artifacts: true 
   script:
-    - cd ./src/allert-react-native
     - node_modules/eslint/bin/eslint.js .
 
 jest-tests:
   stage: jest-test
+  needs:
+    - job: installation
+      artifacts: true  
   script:
-    - cd ./src/allert-react-native
     - npx jest --ci 
