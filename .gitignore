@@ -16,4 +16,4 @@
 pylibs-layer.zip
 tesseract-layer.zip
 
-allert-react-native/coverage/**/*
+src/allert-react-native/coverage/**/*
