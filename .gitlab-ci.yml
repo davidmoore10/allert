@@ -13,11 +13,6 @@ cache:
 before_script:
   - cd ./src/allert-react-native && npm ci --legacy-peer-deps --cache .npm --prefer-offline
 
-installation:
-  stage: init
-  script:
-    - cd ./src/allert-react-native && npm ci --legacy-peer-deps --cache .npm --prefer-offline
-
 eslint:
   stage: lint
   script:
