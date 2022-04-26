@@ -19,9 +19,11 @@ installation:
 eslint:
   stage: lint
   script:
+    - cd ./src/allert-react-native
     - node_modules/eslint/bin/eslint.js .
 
 jest-tests:
   stage: jest-test
   script:
+    - cd ./src/allert-react-native
     - npx jest --ci 
