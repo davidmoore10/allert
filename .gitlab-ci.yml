@@ -5,31 +5,25 @@ stages:
   - lint
   - jest-test
 
-installation:
-  stage: init
-  cache:
+cache:
     key: $CI_COMMIT_REF_SLUG
     paths:
-      - .npm/
+      - ./npm
+
+before_script:
+  - cd ./src/allert-react-native && npm ci --legacy-peer-deps --cache .npm --prefer-offline
+
+installation:
+  stage: init
   script:
     - cd ./src/allert-react-native && npm ci --legacy-peer-deps --cache .npm --prefer-offline
-  artifacts:
-    paths:
-      - node_modules/
-
 
 eslint:
   stage: lint
-  needs:
-    - job: installation
-      artifacts: true 
   script:
     - node_modules/eslint/bin/eslint.js .
 
 jest-tests:
   stage: jest-test
-  needs:
-    - job: installation
-      artifacts: true  
   script:
     - npx jest --ci 
